@@ -1,0 +1,33 @@
+{
+  "name": "cse-340",
+  "version": "1.0.0",
+  "description": "Main project forlder for cse340 and class homework",
+  "homepage": "https://github.com/donovanpoland/CSE-340.git",
+  "bugs": {
+    "url": "https://github.com/donovanpoland/CSE-340.git"
+  },
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "(https://github.com/donovanpoland/CSE-340.git)"
+  },
+  "keywords": [
+    "node.js",
+    "servers",
+    "postgress"
+  ],
+  "author": "Donovan Poland",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "ejs": "^5.0.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
