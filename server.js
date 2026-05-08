@@ -48,17 +48,30 @@ app.set('views', path.join(__dirname, 'src/views'));
 */
 app.get('/', async (req, res) => {
     const title = 'Home';
-    res.render('home', { title });
+    const keywords = '';
+    const description = '';
+    res.render('home', { title, keywords, description });
 });
 
 app.get('/organizations', async (req, res) => {
     const title = 'Our Partner Organizations';
-    res.render('organizations', { title });
+    const keywords = '';
+    const description = '';
+    res.render('organizations', { title, keywords, description });
 });
 
 app.get('/projects', async (req, res) => {
     const title = 'Service Projects';
-    res.render('projects', { title });
+    const keywords = '';
+    const description = '';
+    res.render('projects', { title, keywords, description });
+});
+
+app.get('/categories', async (req, res) =>{
+    const title = "Service Project Categories";
+    const keywords = '';
+    const description = '';
+    res.render('categories', { title, keywords, description });
 });
 
 // use the listen method from the Express application object

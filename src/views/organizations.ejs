@@ -1,11 +1,30 @@
+<%- include('partials/head', { title, keywords, description }) %>
 <%- include('partials/header') %>
 <main>
     <h1><%= title %></h1>
-    <p>Here are a few of our partner organizations:</p>
-    <ul class="rmv_liststyle">
-        <li><img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo"><strong>BrightFuture Builders</strong>: info@brightfuture.org</li>
-        <li><img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo"><strong>GreenHarvest Growers</strong>: contact@greenharvest.org</li>
-        <li><img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo"><strong>UnityServe Volunteers</strong>: hello@unityserve.org</li>
+    <p class="lede">Here are a few of our partner organizations:</p>
+    <ul class="rmv_liststyle content-list logo-list">
+        <li>
+            <img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo">
+            <div>
+                <strong>BrightFuture Builders</strong>
+                <span>info@brightfuture.org</span>
+            </div>
+        </li>
+        <li>
+            <img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo">
+            <div>
+                <strong>GreenHarvest Growers</strong>
+                <span>contact@greenharvest.org</span>
+            </div>
+        </li>
+        <li>
+            <img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo">
+            <div>
+                <strong>UnityServe Volunteers</strong>
+                <span>hello@unityserve.org</span>
+            </div>
+        </li>
     </ul>
 </main>
 <%- include('partials/footer') %>

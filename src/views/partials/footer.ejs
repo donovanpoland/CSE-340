@@ -1,5 +1,34 @@
-<footer>
-        <p>&copy; <%= new Date().getFullYear() %> CSE 340 Service Network.</p>
-    </footer>
-</body>
+        <footer>
+            <p>&copy; <%= new Date().getFullYear() %> CSE 340 Service Network.</p>
+        </footer>
+        <script>
+            const siteNav = document.querySelector(".site-nav");
+            const navToggle = document.querySelector(".nav-toggle");
+
+            if (siteNav && navToggle) {
+                const mobileBreakpoint = window.matchMedia("(max-width: 40rem)");
+
+                const syncNavState = (isMobile) => {
+                    const isOpen = isMobile ? siteNav.dataset.navOpen === "true" : true;
+                    navToggle.setAttribute("aria-expanded", String(isOpen));
+
+                    if (!isMobile) {
+                        siteNav.dataset.navOpen = "false";
+                    }
+                };
+
+                navToggle.addEventListener("click", () => {
+                    const nextState = siteNav.dataset.navOpen !== "true";
+                    siteNav.dataset.navOpen = String(nextState);
+                    navToggle.setAttribute("aria-expanded", String(nextState));
+                });
+
+                mobileBreakpoint.addEventListener("change", (event) => {
+                    syncNavState(event.matches);
+                });
+
+                syncNavState(mobileBreakpoint.matches);
+            }
+        </script>
+    </body>
 </html>
