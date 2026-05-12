@@ -1,9 +1,13 @@
 //import the express function from express
 import express from "express";
 
+//import fileurltopath function
 import { fileURLToPath } from 'url';
+//import path object
 import path from 'path';
+//set filename to the absolute path of the file imported from the server
 const __filename = fileURLToPath(import.meta.url);
+// set the directory by providing the filename and path to dirname function of path object
 const __dirname = path.dirname(__filename);
 
 // use the string stored in .env to display what enviroment is being worked inside of
@@ -39,7 +43,6 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
-
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
@@ -47,31 +50,43 @@ app.set('views', path.join(__dirname, 'src/views'));
   * Routes
 */
 app.get('/', async (req, res) => {
+    //page title
     const title = 'Home';
+    //page keywords for SEO
     const keywords = '';
-    const description = '';
-    res.render('home', { title, keywords, description });
+    //page description
+    const desc = '';
+    res.render('home', { title, keywords, desc });
 });
 
 app.get('/organizations', async (req, res) => {
+    //page title
     const title = 'Our Partner Organizations';
+    //page keywords for SEO
     const keywords = '';
-    const description = '';
-    res.render('organizations', { title, keywords, description });
+    //page description
+    const desc = '';
+    res.render('organizations', { title, keywords, desc });
 });
 
 app.get('/projects', async (req, res) => {
+    //page title
     const title = 'Service Projects';
+    //page keywords for SEO
     const keywords = '';
-    const description = '';
-    res.render('projects', { title, keywords, description });
+    //page description
+    const desc = '';
+    res.render('projects', { title, keywords, desc });
 });
 
 app.get('/categories', async (req, res) =>{
+    //page title
     const title = "Service Project Categories";
+    //page keywords for SEO
     const keywords = '';
-    const description = '';
-    res.render('categories', { title, keywords, description });
+    //page description
+    const desc = '';
+    res.render('categories', { title, keywords, desc });
 });
 
 // use the listen method from the Express application object
