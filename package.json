@@ -9,7 +9,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "node server.js"
+    "start": "NODE_ENV=production node --env-file=.env server.js"
   },
   "repository": {
     "type": "git",
