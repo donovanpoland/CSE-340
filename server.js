@@ -15,7 +15,6 @@ import path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 // set the directory by providing the filename and path to dirname function of path object
 const __dirname = path.dirname(__filename);
-
 // use the string stored in .env to display what enviroment is being worked inside of
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 // use the port stored in .env or default to this port
@@ -24,9 +23,6 @@ const PORT = process.env.PORT || 3000;
 const IP = process.env.IP || "127.0.0.1";
 // use https if in production and http if in development (this doesnt change the protocal just the string used)
 const PROTO = "http://";
-
-console.log("File is running...");
-
 // call the express function and store the returned application object in app
 const app = express();
 
