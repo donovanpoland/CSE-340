@@ -6,8 +6,8 @@
     <ul class="rmv_liststyle">
         <% organizations.forEach(organization => { %>
         <li class="card">
-            <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
-            <div><strong><%= organization.name %></strong>: <%= organization.contact_email %></div>
+            <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.org_name %> logo">
+            <div><strong><%= organization.org_name %></strong>: <%= organization.contact_email %></div>
         </li>
         <% }); %>
     </ul>

@@ -1,12 +1,32 @@
-<%- include('partials/head', { title, keywords, desc }) %>
+<%- include('partials/head', { title, keywords, desc, projects }) %>
 <%- include('partials/header') %>
 <main>
     <h1><%= title %></h1>
     <h2>Upcoming Service Projects</h2>
-    <ul>
-        <li>Park Cleanup - Join us to clean up local parks and make them beautiful!</li>
-        <li>Food Drive - Help collect and distribute food to those in need.</li>
-        <li>Community Tutoring - Volunteer to tutor students in various subjects.</li>
+    <ul class="rmv-liststyle">
+        <% projects.forEach(project=> { %>
+            <li class="card">
+                <div>
+                    <span>
+                        <strong>
+                            <%= project.title %> -
+                        </strong>
+                        <%= new Date(project.project_datetime).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                        }) %>
+                    </span>
+                    <br>
+                    <%= project.description %>
+                </div>
+                Organized By (<%= project.organization_name %>)
+                <br>
+                Located in <%= project.event_location %>
+            </li>
+        <% }); %>
     </ul>
 </main>
 <%- include('partials/footer') %>
