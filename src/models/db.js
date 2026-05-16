@@ -78,7 +78,7 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
 
 /**
  * Tests the database connection by executing a simple query.
- */
+*/
 const testConnection = async() => {
     try {
         const result = await db.query('SELECT NOW() as current_time');
