@@ -1,7 +1,3 @@
--- Do not run this whole file as a single query
--- some queries are just place holders for futures use
--- choose the querys needed and run only those
-
 --Mass insert into projects
 INSERT INTO projects (
   organization_id,
@@ -41,39 +37,3 @@ JOIN (
   ('UnityServe Volunteers', 'Holiday Volunteer Planning Fair', 'Recruiting and organizing volunteers for upcoming seasonal service projects.', 'Eagle, Idaho', '2026-08-09 15:00:00-06'::timestamptz)
 ) AS proj(org_name, title, description, event_location, project_datetime)
   ON org.org_name = proj.org_name;
-
--- Insert by id a single project
-INSERT INTO projects (
-  organization_id,
-  title,
-  description,
-  event_location,
-  project_datetime
-)
-VALUES (
-  1, -- org id
-  '', -- title
-  '', -- desc
-  '', -- location
-  --yyyy-dd-mm hh:mm:ss-tz - dont for get to update below placeholder
-   '0000-00-00 00:00:00-00'::timestamptz
-);
-
-
--- Insert by name a single project
-INSERT INTO projects (
-  organization_id,
-  title,
-  description,
-  event_location,
-  project_datetime
-  )
-SELECT
-  organization_id,
-  '', -- title
-  '', -- desc
-  '', -- location
-  --yyyy-dd-mm hh:mm:ss-tz - dont for get to update below placeholder
-  '0000-00-00 00:00:00-00'::timestamptz
-FROM organization
-WHERE org_name = ''; -- project name (must be exact)

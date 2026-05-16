@@ -1,5 +1,8 @@
+-- create a table named organization
+-- this table stores organizations and info about them
+--1:N
 CREATE TABLE organization (
-    organization_id SERIAL PRIMARY KEY,
+    organization_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     org_name VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
     contact_email VARCHAR(255) NOT NULL,
@@ -9,6 +12,7 @@ CREATE TABLE organization (
 
 -- Create a table named "projects"
 -- This table stores project records and connects each one to an organization
+-- 1:N
 CREATE TABLE projects (
     -- Primary key for the table
     -- GENERATED ALWAYS AS IDENTITY tells PostgreSQL to auto-create
@@ -35,16 +39,43 @@ CREATE TABLE projects (
     project_datetime TIMESTAMPTZ NOT NULL,
 
     -- Name this foreign key(fk) constraint for clarity
-    -- It requires organization_id here to match an existing
-    -- organization_id in the organization table
-    -- ON DELETE CASCADE means if an organization is deleted,
-    -- all related projects will be deleted automatically
     CONSTRAINT fk_projects_organization
+        -- It requires organization_id here to match an existing
+        -- organization_id in the organization table
         FOREIGN KEY (organization_id)
         REFERENCES organization(organization_id)
+        -- ON DELETE CASCADE means if an organization is deleted,
+        -- all related projects will be deleted automatically
         ON DELETE CASCADE
 );
 
 -- Create an index on organization_id
 -- This speeds up queries that search projects by organization
 CREATE INDEX idx_projects_organization_id ON projects (organization_id);
+
+-- Create a table named categories
+-- this table stores the categories related to the types of available projects
+CREATE TABLE categories (
+    -- Primary key for the table
+    -- GENERATED ALWAYS AS IDENTITY tells PostgreSQL to auto-create
+    -- a new numeric ID for each inserted row
+    category_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    cat_name VARCHAR(100) NOT NULL UNIQUE,
+    cat_description TEXT
+);
+
+-- Create a junction table for projects and categories
+-- This implements the many-to-many relationship
+CREATE TABLE project_categories(
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (project_id, category_id),
+    CONSTRAINT fk_project_categories_project
+        FOREIGN KEY (project_id) 
+        REFERENCES projects(project_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_project_categories_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories(category_id)
+        ON DELETE CASCADE
+);
