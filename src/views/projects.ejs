@@ -3,8 +3,8 @@
 <main>
     <h1><%= title %></h1>
     <h2>Upcoming Service Projects</h2>
-    <ul class="rmv-liststyle">
-        <% projects.forEach(project=> { %>
+    <ul class="rmv_liststyle">
+        <% projects.forEach(project => { %>
             <li class="card">
                 <div>
                     <span>
@@ -17,10 +17,10 @@
                             day: 'numeric',
                             hour: 'numeric',
                             minute: '2-digit',
-                        }) %>
+                        }); %>
                     </span>
                     <br>
-                    <%= project.description %>
+                    <%= project.proj_description %>
                 </div>
                 Organized By (<%= project.organization_name %>)
                 <br>

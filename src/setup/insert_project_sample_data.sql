@@ -2,14 +2,14 @@
 INSERT INTO projects (
   organization_id,
   title,
-  description,
+  proj_description,
   event_location,
   project_datetime
 )
 SELECT
   org.organization_id,
   proj.title,
-  proj.description,
+  proj.proj_description,
   proj.event_location,
   proj.project_datetime
 FROM organization org
@@ -35,5 +35,5 @@ JOIN (
   ('UnityServe Volunteers', 'Local Shelter Meal Service Night', 'Preparing and serving meals for guests at a local emergency shelter.', 'Nampa, Idaho', '2026-07-11 17:30:00-06'::timestamptz),
   ('UnityServe Volunteers', 'Back-to-School Backpack Drive', 'Assembling backpacks with school supplies for students in need.', 'Caldwell, Idaho', '2026-07-24 13:00:00-06'::timestamptz),
   ('UnityServe Volunteers', 'Holiday Volunteer Planning Fair', 'Recruiting and organizing volunteers for upcoming seasonal service projects.', 'Eagle, Idaho', '2026-08-09 15:00:00-06'::timestamptz)
-) AS proj(org_name, title, description, event_location, project_datetime)
+) AS proj(org_name, title, proj_description, event_location, project_datetime)
   ON org.org_name = proj.org_name;

@@ -7,6 +7,7 @@ import { testConnection } from './src/models/db.js';
 // import SQL queries
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from "./src/models/projects.js";
+import { getAllCategories } from "./src/models/categories.js";
 
 //import fileurltopath function
 import { fileURLToPath } from 'url';
@@ -89,13 +90,14 @@ app.get('/projects', async (req, res) => {
 });
 
 app.get('/categories', async (req, res) =>{
+    const categories = await getAllCategories();
     //page title
     const title = "Service Project Categories";
     //page keywords for SEO
     const keywords = '';
     //page description
     const desc = '';
-    res.render('categories', { title, keywords, desc });
+    res.render('categories', { title, keywords, desc, categories });
 });
 
 // use the listen method from the Express application object

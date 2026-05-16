@@ -1,10 +1,10 @@
-import db from './db.js'
+import db from './db.js';
 
 const getAllProjects = async() => {
     const query = `
         SELECT
           proj.title,
-          proj.description,
+          proj.proj_description,
           proj.event_location,
           proj.project_datetime,
           org.org_name AS organization_name
@@ -19,4 +19,4 @@ const getAllProjects = async() => {
     return result.rows;
 }
 
-export {getAllProjects}  
+export {getAllProjects};

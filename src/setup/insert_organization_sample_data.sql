@@ -1,7 +1,7 @@
 --Mass insert into organization
 INSERT INTO organization (
     org_name, 
-    description,
+    org_description,
     contact_email, 
     logo_filename
     )

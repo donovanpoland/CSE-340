@@ -4,7 +4,7 @@
 CREATE TABLE organization (
     organization_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     org_name VARCHAR(150) NOT NULL,
-    description TEXT NOT NULL,
+    org_description TEXT NOT NULL,
     contact_email VARCHAR(255) NOT NULL,
     logo_filename VARCHAR(255) NOT NULL
 );
@@ -29,7 +29,7 @@ CREATE TABLE projects (
 
     -- Longer text field for project details
     -- TEXT is used when you do not want a strict length limit
-    description TEXT NOT NULL,
+    proj_description TEXT NOT NULL,
 
     -- Location where the project or related event happens
     event_location VARCHAR(255) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE categories (
     -- a new numeric ID for each inserted row
     category_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     cat_name VARCHAR(100) NOT NULL UNIQUE,
-    cat_description TEXT
+    cat_description TEXT NOT NULL
 );
 
 -- Create a junction table for projects and categories

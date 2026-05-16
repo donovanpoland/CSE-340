@@ -36,3 +36,15 @@ SELECT column_name, is_identity, identity_generation
 -- add description column to categories table
 ALTER TABLE categories
   ADD COLUMN cat_description TEXT;
+
+-- update organization description to org_description
+ALTER TABLE organization
+  RENAME COLUMN description TO org_description;
+
+-- update project description to proj_description
+ALTER TABLE projects
+  RENAME COLUMN description TO proj_description;
+
+-- update categories description to required
+ALTER TABLE categories
+  ALTER COLUMN cat_description SET NOT NULL;
