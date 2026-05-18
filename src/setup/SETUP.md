@@ -15,5 +15,5 @@
 
 # NOTES
 
-- db_queries_js.sql contains the queries used inside the model files for bringing information from the database to the webpage via JavaScript.
-- queries.sql are just queries used throughout the project for easy access and are not needed for set up.
+- [Data base queries](db_queries_js.sql) contains the queries used inside the model files for bringing information from the database to the webpage via JavaScript.
+- [Queries](queries.sql) are just queries used throughout the project for easy access and are not needed for set up.
