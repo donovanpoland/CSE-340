@@ -1,5 +1,6 @@
 --Mass insert into projects
 INSERT INTO projects (
+  -- no project ID needed as it is auto generated
   organization_id,
   title,
   proj_description,

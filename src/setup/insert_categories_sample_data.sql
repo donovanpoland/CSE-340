@@ -1,4 +1,5 @@
 INSERT INTO categories (
+    -- no ID needed as it is auto generated
     cat_name,
     cat_description
 )

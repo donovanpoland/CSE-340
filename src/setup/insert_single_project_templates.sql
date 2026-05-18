@@ -5,16 +5,16 @@
 INSERT INTO projects (
   organization_id,
   title,
-  description,
+  proj_description,
   event_location,
   project_datetime
 )
 VALUES (
-  1, -- org id
+  1, -- org id - change this number
   '', -- title
   '', -- desc
   '', -- location
-  --yyyy-dd-mm hh:mm:ss-tz - dont for get to update below placeholder
+  --yyyy-dd-mm hh:mm:ss-tz - don't forget to update below placeholder
    '0000-00-00 00:00:00-00'::timestamptz
 );
 
@@ -22,7 +22,7 @@ VALUES (
 INSERT INTO projects (
   organization_id,
   title,
-  description,
+  proj_description,
   event_location,
   project_datetime
   )
@@ -31,7 +31,7 @@ SELECT
   '', -- title
   '', -- desc
   '', -- location
-  --yyyy-dd-mm hh:mm:ss-tz - dont for get to update below placeholder
+ --yyyy-dd-mm hh:mm:ss-tz - don't forget to update below placeholder
   '0000-00-00 00:00:00-00'::timestamptz
 FROM organization
 WHERE org_name = ''; -- project name (must be exact)

@@ -1,5 +1,6 @@
 --Mass insert into organization
 INSERT INTO organization (
+    -- no ID needed as it is auto generated
     org_name, 
     org_description,
     contact_email, 
