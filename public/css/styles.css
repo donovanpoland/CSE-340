@@ -172,7 +172,6 @@ main {
 
     h1,
     h2,
-    p,
     ul {
         display: grid;
         margin: 0;
