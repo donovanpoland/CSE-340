@@ -1,24 +1,21 @@
 //import the express function from express
 import express from "express";
-
-// import testing of databse connection
-import { testConnection } from './src/models/db.js';
-
-// import SQL queries
-import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllProjects } from "./src/models/projects.js";
-import { getAllCategories } from "./src/models/categories.js";
-
 //import fileurltopath function
 import { fileURLToPath } from 'url';
 //import path object
 import path from 'path';
+// import testing of databse connection
+import { testConnection } from './src/models/db.js';
+// import routes object
+import router from './src/routes.js';
+
+
+// use the string stored in .env to display what enviroment is being worked inside of
+const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 //set filename to the absolute path of the file imported from the server
 const __filename = fileURLToPath(import.meta.url);
 // set the directory by providing the filename and path to dirname function of path object
 const __dirname = path.dirname(__filename);
-// use the string stored in .env to display what enviroment is being worked inside of
-const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 // use the port stored in .env or default to this port
 const PORT = process.env.PORT || 3000;
 // use the IP or address stored in .env or this default IP
@@ -28,76 +25,62 @@ const PROTO = "http://";
 // call the express function and store the returned application object in app
 const app = express();
 
-// use the get method from the Express application object
-// register a route handler for GET requests to "/"
-//
-// req = request object created by Express
-// res = response object created by Express
-//
-// use the send method from the response object to send data back to the client/browser 
-// app.get("/", (req, res) => {
-//     res.send("Hello from Express (from nodemon) (live edit)")
-//     console.log("Hello, Node.js!");
-// });
 
-/**
-  * Configure Express middleware
-*/
+/**** Configure Express middleware ****/
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
-
-/**
-  * Routes
-*/
-app.get('/', async (req, res) => {
-    //page title
-    const title = 'Home';
-    //page keywords for SEO
-    const keywords = '';
-    //page description
-    const desc = '';
-    res.render('home', { title, keywords, desc });
+// Middleware to log all incoming requests
+app.use((req, res, next) => {
+    if (NODE_ENV === 'development') {
+        console.log(`${req.method} ${req.url}`);
+    }
+    next(); // Pass control to the next middleware or route
 });
 
-app.get('/organizations', async (req, res) => {
-
-  const organizations = await getAllOrganizations();
-  // console.log(organizations);
-  //page title
-  const title = 'Our Partner Organizations';
-  //page keywords for SEO
-  const keywords = '';
-  //page description
-  const desc = '';
-  res.render('organizations', { title, keywords, desc, organizations });
+// Middleware to make NODE_ENV available to all templates
+app.use((req, res, next) => {
+    res.locals.NODE_ENV = NODE_ENV;
+    next();// Pass control to the next middleware or route
 });
 
-app.get('/projects', async (req, res) => {
+// Use the imported router to handle routes
+app.use(router);
 
-  const projects = await getAllProjects();
-  //console.log(projects);
-  //page title
-  const title = 'Service Projects';
-  //page keywords for SEO
-  const keywords = '';
-  //page description
-  const desc = '';
-  res.render('projects', { title, keywords, desc, projects });
+
+// *** Errors ***
+// Catch-all route for 404 errors
+app.use((req, res, next) => {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err);
 });
 
-app.get('/categories', async (req, res) =>{
-    const categories = await getAllCategories();
-    //page title
-    const title = "Service Project Categories";
-    //page keywords for SEO
-    const keywords = '';
-    //page description
-    const desc = '';
-    res.render('categories', { title, keywords, desc, categories });
+// Global error handler
+app.use((err, req, res, next) => {
+    // Log error details for debugging
+    if(err.message != "")
+    console.error('Error occurred:', err.message);
+    console.error('Stack trace:', err.stack);
+    
+    // Determine status and template
+    const status = err.status || 500;
+    const template = status === 404 ? '404' : '500';
+    
+    // Prepare data for the template
+    const context = {
+        title: status === 404 ? 'Page Not Found' : 'Server Error',
+        keywords: `Error ${status}`,
+        desc: `${status} status error code page`,
+        error: err.message,
+        stack: err.stack
+    };
+    
+    // Render the appropriate error template
+    res.status(status).render(`errors/${template}`, context);
 });
 
 // use the listen method from the Express application object
@@ -111,9 +94,6 @@ app.listen(PORT, async () => {
     console.error('Error connecting to the database:', error);
   }
 });
-
-
-
 
 
 
