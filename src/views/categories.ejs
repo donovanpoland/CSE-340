@@ -1,15 +1,15 @@
 <%- include('partials/head', { title, keywords, desc, categories }) %>
 <%- include('partials/header') %>
-<main>
-    <h1><%= title %></h1>
-    <ul class="rmv_liststyle">
-        <% categories.forEach(category => { %>
-            <li class="card">
-                <%= category.cat_name %>
-                <br>
-                <%= category.cat_description %>
-            </li>
-        <% }); %>
-    </ul>
-</main>
+    <main>
+        <h1><%= title %></h1>
+        <ul class="rmv_liststyle">
+            <% categories.forEach(category => { %>
+                <li class="card">
+                    <%= category.cat_name %>
+                    <br>
+                    <%= category.cat_description %>
+                </li>
+            <% }); %>
+        </ul>
+    </main>
 <%- include('partials/footer') %>

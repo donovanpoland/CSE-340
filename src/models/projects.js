@@ -25,7 +25,7 @@ const getUpcomingProjects = async (number_of_projects) =>{
             proj.project_id,
             proj.title,
             proj.description,
-            proj.date,
+            proj.project_datetime,
             proj.location,
             proj.organization_id,
             org.org_name AS organization_name
@@ -37,5 +37,25 @@ const getUpcomingProjects = async (number_of_projects) =>{
     `;
 }
 
+const getProjectsByOrganizationId = async (organizationId) => {
+      const query = `
+        SELECT
+          project_id,
+          organization_id,
+          title,
+          proj_description,
+          event_location,
+          project_datetime
+        FROM projects
+        WHERE organization_id = $1
+        ORDER BY project_datetime;
+      `;
+      
+      const queryParams = [organizationId];
+      const result = await db.query(query, queryParams);
 
-export {getAllProjects, getUpcomingProjects};
+      return result.rows;
+};
+
+
+export {getAllProjects, getUpcomingProjects, getProjectsByOrganizationId};

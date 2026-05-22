@@ -1,14 +1,13 @@
-// Import any needed model functions (none are needed for the home page, so this is empty)
+import { getMetaData } from "../utils/meta.js";
 
 // Define any controller functions
 const homePage = async (req, res) => {
-    //page title
-    const title = 'Home';
-    //page keywords for SEO
-    const keywords = '';
-    //page description
-    const desc = '';
-    res.render('home', { title, keywords, desc });
+    const meta = getMetaData(
+        "Home",
+        ["home", "community service", "volunteering"],
+        "Browse local service projects and community organizations."
+    );
+    res.render('home', meta);
 };
 
 // Export any controller functions

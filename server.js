@@ -8,6 +8,7 @@ import path from 'path';
 import { testConnection } from './src/models/db.js';
 // import routes object
 import router from './src/routes.js';
+import { getMetaData } from "./src/utils/meta.js";
 
 
 // use the string stored in .env to display what enviroment is being worked inside of
@@ -51,7 +52,7 @@ app.use((req, res, next) => {
 app.use(router);
 
 
-// *** Errors ***
+// *** Error handlers ***
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
@@ -69,12 +70,19 @@ app.use((err, req, res, next) => {
     // Determine status and template
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
+
+    // Get page meta data
+    const meta = getMetaData(
+          status === 404 ? "Page Not Found" : "Server Error",
+          "error",
+          `${status} status error code page`
+    );
     
     // Prepare data for the template
     const context = {
-        title: status === 404 ? 'Page Not Found' : 'Server Error',
-        keywords: `Error ${status}`,
-        desc: `${status} status error code page`,
+        title: meta.title,
+        keywords: meta.keywords,
+        desc:  meta.desc,
         error: err.message,
         stack: err.stack
     };
@@ -94,6 +102,5 @@ app.listen(PORT, async () => {
     console.error('Error connecting to the database:', error);
   }
 });
-
 
 
