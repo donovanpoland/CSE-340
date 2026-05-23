@@ -3,28 +3,24 @@
     <main>
         <h1><%= title %></h1>
         <h2>Upcoming Service Projects</h2>
-        <ul class="rmv_liststyle">
+        <ul>
             <% projects.forEach(project => { %>
                 <li class="card">
-                    <div>
-                        <span>
-                            <strong>
-                                <%= project.title %> -
-                            </strong>
-                            <%= new Date(project.project_datetime).toLocaleString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: 'numeric',
-                                minute: '2-digit',
-                            }); %>
-                        </span>
-                        <br>
-                        <%= project.proj_description %>
-                    </div>
-                    Organized By (<%= project.organization_name %>)
-                    <br>
-                    Located in <%= project.event_location %>
+                        <a href="/project/<%= project.project_id%>">
+                            <strong><%= project.title %></strong>
+                            <br>
+                            <%= project.project_datetime %>
+                        </a>
+                        <div>
+                            <span>
+                                <a href="/organization/<%= project.organization_id %>">Organized By <%= project.organization_name%></a>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                Located in <%= project.event_location %>
+                            </span>
+                        </div>
                 </li>
             <% }); %>
         </ul>

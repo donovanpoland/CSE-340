@@ -5,9 +5,16 @@
         <ul class="rmv_liststyle">
             <% categories.forEach(category => { %>
                 <li class="card">
-                    <%= category.cat_name %>
-                    <br>
-                    <%= category.cat_description %>
+                    <div>
+                        <span>
+                            <strong><%= category.cat_name %></strong>
+                        </span>
+                    </div>
+                    <div>
+                        <span>
+                            <%= category.cat_description %>
+                        </span>
+                    </div>
                 </li>
             <% }); %>
         </ul>

@@ -1,0 +1,12 @@
+<%- include('partials/head', { title, keywords, desc, project }) %>
+<%- include('partials/header') %>
+    <main>
+        <h1><%= title %></h1>
+        <ul class="rmv_liststyle">
+            <li><strong>Description</strong>: <%= project.proj_description %></li>
+            <li><strong>When</strong>: <%= project.project_datetime %></li>
+            <li><strong>Location</strong>: <%= project.event_location %></li>
+            <li><strong>Organized By: </strong><a href="/organization/<%= project.organization_id %>"><%= project.organization_name%></a></li>
+        </ul>
+    </main>
+<%- include('partials/footer') %>
