@@ -1,32 +1,38 @@
 import db from './db.js';
 
+//if database columns change update here to update all queries
+const orId = "organization_id";
+const orName = "org_name";
+const orDesc = "org_description";
+const email = "contact_email";
+const fileName = "logo_filename";
+
 const getAllOrganizations = async() => {
     const query = `
         SELECT 
-            organization_id, 
-            org_name, 
-            org_description, 
-            contact_email, 
-            logo_filename
-        FROM public.organization
-        ORDER BY org_name ASC;
+            org.${orId},
+            org.${orName}, 
+            org.${email}, 
+            org.${fileName}
+        FROM public.organization org
+        ORDER BY org.${orName} ASC;
     `;
 
     const result = await db.query(query);
 
     return result.rows;
-}
+};
 
 const getOrganizationDetails = async (organizationId) => {
       const query = `
       SELECT
-        organization_id,
-        org_name,
-        org_description,
-        contact_email,
-        logo_filename
-      FROM public.organization
-      WHERE organization_id = $1;
+        org.${orId},
+        org.${orName},
+        org.${orDesc},
+        org.${email},
+        org.${fileName}
+      FROM public.organization org
+      WHERE org.${orId} = $1;
     `;
 
       const queryParams = [organizationId];

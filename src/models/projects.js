@@ -1,39 +1,29 @@
 import db from './db.js';
 
-const getAllProjects = async() => {
-    const query = `
-        SELECT
-            proj.title,
-            proj.proj_description,
-            proj.event_location,
-            proj.project_datetime,
-            org.org_name AS organization_name
-        FROM public.projects proj
-        JOIN public.organization org 
-        ON proj.organization_id = org.organization_id
-        ORDER BY proj.project_datetime;
-    `;
+//if database columns change update here to update all queries
+const pId = "project_id"
+const pTitle = "title";
+const pDesc = "proj_description";
+const pdt = "project_datetime";
+const pLoc = "event_location";
+const orId = "organization_id";
+const orName = "org_name";
 
-    const result = await db.query(query);
-
-    return result.rows;
-}
 
 const getUpcomingProjects = async (number_of_projects) =>{
     const query = `
         SELECT
-            proj.project_id,
-            proj.title,
-            proj.proj_description,
-            proj.project_datetime,
-            proj.event_location,
-            proj.organization_id,
-            org.org_name AS organization_name
+            proj.${pId},
+            proj.${pTitle},
+            proj.${pdt},
+            proj.${pLoc},
+            proj.${orId},
+            org.${orName} AS organization_name
         FROM public.projects proj
         JOIN public.organization org 
-        ON proj.organization_id = org.organization_id
-        WHERE proj.project_datetime >= CURRENT_DATE
-        ORDER BY proj.project_datetime ASC
+        ON proj.${orId} = org.${orId}
+        WHERE proj.${pdt} >= CURRENT_DATE
+        ORDER BY proj.${pdt} ASC
         LIMIT $1;
     `;
 
@@ -45,18 +35,17 @@ const getUpcomingProjects = async (number_of_projects) =>{
 const getProjectDetails = async (id) => {
     const query = `
         SELECT
-            proj.project_id,
-            proj.title,
-            proj.proj_description,
-            proj.event_location,
-            proj.project_datetime,
-            proj.organization_id,
-            org.org_name AS organization_name
+            proj.${pId},
+            proj.${pTitle},
+            proj.${pDesc},
+            proj.${pLoc},
+            proj.${pdt},
+            proj.${orId},
+            org.${orName} AS organization_name
         FROM public.projects proj
         JOIN public.organization org 
-        ON proj.organization_id = org.organization_id
-        WHERE proj.project_id = $1
-        ORDER BY proj.project_datetime;
+        ON proj.${orId} = org.${orId}
+        WHERE proj.${pId} = $1
     `;
 
     const result = await db.query(query, [id]);
@@ -67,15 +56,15 @@ const getProjectDetails = async (id) => {
 const getProjectsByOrganizationId = async (organizationId) => {
       const query = `
         SELECT
-          project_id,
-          organization_id,
-          title,
-          proj_description,
-          event_location,
-          project_datetime
-        FROM projects
-        WHERE organization_id = $1
-        ORDER BY project_datetime;
+          proj.${pId},
+          proj.${orId},
+          proj.${pTitle},
+          proj.${pDesc},
+          proj.${pLoc},
+          proj.${pdt}
+        FROM public.projects proj
+        WHERE proj.${orId} = $1
+        ORDER BY proj.${pdt};
       `;
       
       const queryParams = [organizationId];
@@ -86,4 +75,4 @@ const getProjectsByOrganizationId = async (organizationId) => {
 
 
 
-export {getAllProjects, getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails};
+export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails};
