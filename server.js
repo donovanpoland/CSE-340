@@ -9,10 +9,15 @@ import { testConnection } from './src/models/db.js';
 // import routes object
 import router from './src/routes.js';
 import { getMetaData } from "./src/utils/meta.js";
+// import express sessions
+import session from 'express-session';
+import flash from './src/middleware/flash.js';
 
 
 // use the string stored in .env to display what enviroment is being worked inside of
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
+// use the string stored in .env to load the session secret
+const SESSION_SECRET = process.env.SESSION_SECRET;
 //set filename to the absolute path of the file imported from the server
 const __filename = fileURLToPath(import.meta.url);
 // set the directory by providing the filename and path to dirname function of path object
@@ -28,6 +33,18 @@ const app = express();
 
 
 /**** Configure Express middleware ****/
+// Set up session management
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 1 hour of inactivity
+}));
+// Use flash message middleware
+app.use(flash);
+// Allow Express to receive and process common POST data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 // Set EJS as the templating engine
@@ -52,7 +69,7 @@ app.use((req, res, next) => {
 app.use(router);
 
 
-// *** Error handlers ***
+// *** Error handlers *** //
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');

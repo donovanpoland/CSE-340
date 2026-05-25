@@ -54,3 +54,7 @@ ALTER TABLE projects
 -- update categories description to required
 ALTER TABLE categories
   ALTER COLUMN cat_description SET NOT NULL;
+
+-- Delete test organizations
+DELETE FROM organization
+  WHERE organization_id = <change this numnber>;
