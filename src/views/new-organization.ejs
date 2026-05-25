@@ -9,6 +9,7 @@
                 type="text"
                 id="name"
                 name="name"
+                required
             />
             </div>
 
@@ -17,15 +18,20 @@
             <textarea
                 id="description"
                 name="description"
+                required
+                minlength="3"
+                maxlength="150"
             ></textarea>
             </div>
 
             <div class="form-group">
             <label for="contactEmail">Contact Email</label>
             <input
-                type="text"
+                type="email"
                 id="contactEmail"
                 name="contactEmail"
+                required
+                maxlength="500"
             />
             </div>
 

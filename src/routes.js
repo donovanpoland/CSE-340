@@ -3,7 +3,13 @@ import express, { Router } from "express";
 
 // import routes
 import { homePage } from "./controllers/index.js";
-import { organizationsPage, organizationDetailsPage, newOrganizationForm, processNewOrganizationForm } from "./controllers/organizations.js";
+import { 
+    organizationsPage, 
+    organizationDetailsPage, 
+    newOrganizationForm, 
+    processNewOrganizationForm,
+    organizationValidation 
+} from "./controllers/organizations.js";
 import { projectsPage, projectDetailsPage } from "./controllers/projects.js";
 import { categoriesPage, categoryDetailsPage} from "./controllers/categories.js";
 import { testErrorPage } from "./controllers/errors.js";
@@ -14,7 +20,7 @@ router.get('/', homePage);
 router.get('/organizations', organizationsPage);
 router.get('/organization/:id', organizationDetailsPage);
 router.get('/new-organization', newOrganizationForm);
-router.post('/new-organization', processNewOrganizationForm);
+router.post('/new-organization', organizationValidation, processNewOrganizationForm);
 router.get('/projects', projectsPage);
 router.get('/project/:id', projectDetailsPage);
 router.get('/categories', categoriesPage);
