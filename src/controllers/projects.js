@@ -1,13 +1,16 @@
 import { getUpcomingProjects, getProjectDetails } from "../models/projects.js";
 import { formatProjectDateTime } from "../utils/datetime.js";
 import { getMetaData } from "../utils/meta.js";
+import { getCategoriesByProjectId } from "../models/categories.js";
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
-const projectsPage = async (req, res) => {
-
-    const projects = (await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS)).map((project) => ({
-        ...project,
+const projectsPage = async (req, res, next) => {
+    // get upcoming projects(limit)
+    // feed array into a map to change the format of the date on each object
+    const projects = (await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS))
+    .map((project) => ({
+        ...project, //all object data
         project_datetime: formatProjectDateTime(project.project_datetime)
     }));
     
@@ -25,11 +28,12 @@ const projectsPage = async (req, res) => {
     });
 };
 
-const projectDetailsPage = async (req, res) => {
+const projectDetailsPage = async (req, res, next) => {
     const { id } = req.params;
     const projectData = await getProjectDetails(id);
+    const categories = await getCategoriesByProjectId(projectData.project_id);
     const project = {
-        ...projectData,
+        ...projectData, //all object data
         project_datetime: formatProjectDateTime(projectData.project_datetime)
     };
 
@@ -43,7 +47,8 @@ const projectDetailsPage = async (req, res) => {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
-        project
+        project,
+        categories
       });
   };
 

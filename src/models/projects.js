@@ -6,10 +6,16 @@ const pTitle = "title";
 const pDesc = "proj_description";
 const pdt = "project_datetime";
 const pLoc = "event_location";
+
 const orId = "organization_id";
 const orName = "org_name";
 
+const cId = "category_id";
+const cName = "cat_name";
+const cDesc = "cat_description";
 
+// Gets a limited list of upcoming projects
+// with their basic details and organization name.
 const getUpcomingProjects = async (number_of_projects) =>{
     const query = `
         SELECT
@@ -27,11 +33,14 @@ const getUpcomingProjects = async (number_of_projects) =>{
         LIMIT $1;
     `;
 
+    // Runs the query and stores the upcoming project rows from the database.
     const result = await db.query(query, [number_of_projects]);
     
     return result.rows;
 };
 
+// Gets the full details for one project,
+// including the organization name, by project ID.
 const getProjectDetails = async (id) => {
     const query = `
         SELECT
@@ -48,11 +57,14 @@ const getProjectDetails = async (id) => {
         WHERE proj.${pId} = $1
     `;
 
+    // Runs the query and stores the matching project details row.
     const result = await db.query(query, [id]);
 
     return result.rows[0];
 };
 
+// Gets all projects that belong to a specific organization,
+// ordered by project date.
 const getProjectsByOrganizationId = async (organizationId) => {
       const query = `
         SELECT
@@ -68,11 +80,10 @@ const getProjectsByOrganizationId = async (organizationId) => {
       `;
       
       const queryParams = [organizationId];
+      // Runs the query and stores all project rows for the selected organization.
       const result = await db.query(query, queryParams);
 
       return result.rows;
 };
-
-
 
 export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails};

@@ -7,6 +7,8 @@ const orDesc = "org_description";
 const email = "contact_email";
 const fileName = "logo_filename";
 
+// Gets all organizations with summary details,
+// ordered alphabetically by organization name.
 const getAllOrganizations = async() => {
     const query = `
         SELECT 
@@ -18,11 +20,13 @@ const getAllOrganizations = async() => {
         ORDER BY org.${orName} ASC;
     `;
 
+    // Runs the query and stores all organization rows from the database.
     const result = await db.query(query);
 
     return result.rows;
 };
 
+// Gets the full details for one organization by organization ID.
 const getOrganizationDetails = async (organizationId) => {
       const query = `
       SELECT
@@ -36,6 +40,7 @@ const getOrganizationDetails = async (organizationId) => {
     `;
 
       const queryParams = [organizationId];
+      // Runs the query and stores the matching organization details row.
       const result = await db.query(query, queryParams);
 
       // Return the first row of the result set, or null if no rows are found

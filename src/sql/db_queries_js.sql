@@ -53,8 +53,6 @@ FROM public.projects proj
 WHERE proj.organization_id = $1
 ORDER BY proj.project_datetime;
 
-
-
 -- *** organizations.js query *** --
 -- get all organization data (getAllOrganizations)
 SELECT 
@@ -105,3 +103,16 @@ JOIN public.projects proj
 ON pc.project_id = proj.project_id
 WHERE cat.category_id = $1
 ORDER BY proj.title;
+
+-- get categories by project id (getCategoriesByProjectId,)
+SELECT
+    cat.category_id,
+    cat.cat_name,
+    cat.cat_description
+FROM public.projects proj
+JOIN public.project_categories pc
+ON proj.project_id = pc.project_id
+JOIN public.categories cat
+ON pc.category_id = cat.category_id
+WHERE proj.project_id = $1
+ORDER BY cat.cat_name;

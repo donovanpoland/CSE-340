@@ -1,20 +1,11 @@
-<%- include('partials/head', { title, keywords, desc, categories }) %>
+<%- include('partials/head', { title, keywords, desc }) %>
 <%- include('partials/header') %>
     <main>
         <h1><%= title %></h1>
         <ul class="rmv_liststyle">
             <% categories.forEach(category => { %>
                 <li class="card">
-                    <div>
-                        <span>
-                            <strong><%= category.cat_name %></strong>
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                            <%= category.cat_description %>
-                        </span>
-                    </div>
+                    <strong><a href="/category/<%= category.category_id %>"><%= category.cat_name %></a></strong>
                 </li>
             <% }); %>
         </ul>

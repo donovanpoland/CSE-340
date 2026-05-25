@@ -1,7 +1,7 @@
-import { getAllCategories } from "../models/categories.js";
+import { getAllCategories, getCategoryById, getProjectsByCategoryId} from "../models/categories.js";
 import { getMetaData } from "../utils/meta.js";
 
-const categoriesPage = async (req, res) => {
+const categoriesPage = async (req, res, next) => {
     const categories = await getAllCategories();
     const meta = getMetaData(
         "Service Project Categories",
@@ -16,4 +16,23 @@ const categoriesPage = async (req, res) => {
     });
 };
 
-export {categoriesPage};
+const categoryDetailsPage = async (req, res, next) => {
+    const categoryId = req.params.id;
+    const category = await getCategoryById(categoryId);
+    const projects = await getProjectsByCategoryId(categoryId);
+    const meta = getMetaData(
+        `${category.cat_name}`,
+        [category.cat_name, "service project categories", "service projects"],
+        `View details for the ${category.cat_name} category and its related service projects.`
+    );
+
+    res.render("category", {
+        title: meta.title,
+        keywords: meta.keywords,
+        desc: meta.desc,
+        category: category,
+        projects: projects
+    });
+};
+
+export {categoriesPage, categoryDetailsPage};

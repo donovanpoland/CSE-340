@@ -2,7 +2,7 @@ import { getAllOrganizations, getOrganizationDetails } from '../models/organizat
 import { getProjectsByOrganizationId } from "../models/projects.js";
 import { getMetaData } from "../utils/meta.js";
 
-const organizationsPage = async (req, res) => {
+const organizationsPage = async (req, res, next) => {
   const organizations = await getAllOrganizations();
   const meta = getMetaData(
     "Our Partner Organizations",
@@ -17,7 +17,7 @@ const organizationsPage = async (req, res) => {
   })
 };
 
-const organizationDetailsPage = async (req, res) => {
+const organizationDetailsPage = async (req, res, next) => {
     const organizationId = req.params.id;
     const organizationDetails = await getOrganizationDetails(organizationId);
     const projects = await getProjectsByOrganizationId(organizationId);
