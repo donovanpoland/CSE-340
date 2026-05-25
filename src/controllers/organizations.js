@@ -1,4 +1,4 @@
-import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+import { getAllOrganizations, getOrganizationDetails, createOrganization } from '../models/organizations.js';
 import { getProjectsByOrganizationId } from "../models/projects.js";
 import { getMetaData } from "../utils/meta.js";
 
@@ -35,6 +35,31 @@ const organizationDetailsPage = async (req, res, next) => {
     });
 };
 
+const newOrganizationForm = async (req, res) => {
+    const title = 'Add New Organization';
+
+    const meta = getMetaData(
+      "New Organization Form",
+      ["", "partner organization", "service projects",],
+      ""
+    );
+
+    res.render('new-organization', { 
+      title: meta.title,
+      keywords: meta.keywords,
+      desc: meta.desc,
+
+    });
+}
+
+const processNewOrganizationForm = async (req, res) => {
+    const { name, description, contactEmail } = req.body;
+    const logoFilename = 'placeholder-logo.png'; // Use the placeholder logo for all new organizations
+
+    const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
+    res.redirect(`/organization/${organizationId}`);
+};
+
 
 // Export any controller functions
-export {organizationsPage, organizationDetailsPage};
+export {organizationsPage, organizationDetailsPage, newOrganizationForm, processNewOrganizationForm};

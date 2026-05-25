@@ -33,6 +33,12 @@ SELECT column_name, is_identity, identity_generation
   WHERE table_name = 'organization'
 	AND column_name = 'organization_id';
 
+-- update max id number as it is now out of sequence
+SELECT setval(
+    pg_get_serial_sequence('organization', 'organization_id'),
+    (SELECT MAX(organization_id) FROM organization)
+  );
+
 -- add description column to categories table
 ALTER TABLE categories
   ADD COLUMN cat_description TEXT;
