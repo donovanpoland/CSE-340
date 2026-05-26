@@ -8,7 +8,9 @@ import {
     organizationDetailsPage, 
     newOrganizationForm, 
     processNewOrganizationForm,
-    organizationValidation 
+    organizationValidation,
+    editOrganizationForm,
+    processEditOrganizationForm
 } from "./controllers/organizations.js";
 import { projectsPage, projectDetailsPage } from "./controllers/projects.js";
 import { categoriesPage, categoryDetailsPage} from "./controllers/categories.js";
@@ -21,10 +23,13 @@ router.get('/organizations', organizationsPage);
 router.get('/organization/:id', organizationDetailsPage);
 router.get('/new-organization', newOrganizationForm);
 router.post('/new-organization', organizationValidation, processNewOrganizationForm);
+router.get('/edit-organization/:id', editOrganizationForm)
+router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
 router.get('/projects', projectsPage);
 router.get('/project/:id', projectDetailsPage);
 router.get('/categories', categoriesPage);
 router.get('/category/:id', categoryDetailsPage);
+
 
 
 // error-handling routes

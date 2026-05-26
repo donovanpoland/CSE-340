@@ -1,0 +1,45 @@
+<%- include('partials/head', { title, keywords, desc }) %>
+<%- include('partials/header') %>
+    <main>
+        <h1><%= title %></h1>
+        <h2><%= organization.org_name %></h2>
+        <p><strong>Organization ID</strong>: <%= organization.organization_id %></p>
+        <form action="/edit-organization/<%= organization.organization_id %>" method="POST">
+            <div class="form-group">
+            <label for="name">Organization Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                value="<%= organization.org_name %>"
+            />
+            </div>
+
+            <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                name="description"
+                required
+                minlength="3"
+                maxlength="150"
+            ><%= organization.org_description %></textarea>
+            </div>
+
+            <div class="form-group">
+            <label for="contactEmail">Contact Email</label>
+            <input
+                type="email"
+                id="contactEmail"
+                name="contactEmail"
+                required
+                maxlength="500"
+                value="<%= organization.contact_email %>"
+            />
+            </div>
+
+            <button type="submit">Finish Edit</button>
+        </form>
+    </main>
+<%- include('partials/footer') %>

@@ -2,16 +2,16 @@
 <%- include('partials/header') %>
 <main>
     <h1><%= title %></h1>
-    <h2><%= organizationDetails.org_name %></h2>
-    <img src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.org_name %> logo">
-
-    <p><strong>Description</strong>: <%= organizationDetails.org_description %></p>
-
+    <h2><%= organization.org_name %></h2>
+    <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.org_name %> logo">
+    <p><strong>Description</strong>: <%= organization.org_description %></p>
+    <p><strong>Email</strong>: <%= organization.contact_email %></p>
     <h3>Service Projects</h3>
     <ul class="rmv_liststyle">
         <% projects.forEach(project => { %>
         <li class="card"><a href="/project/<%= project.project_id %>"><%= project.title %></a></li>
         <% }); %>
     </ul>
+    <a href="/edit-organization/<%= organization.organization_id %>">Edit this organization</a>
 </main>
 <%- include('partials/footer') %>
