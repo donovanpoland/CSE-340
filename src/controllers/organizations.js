@@ -26,7 +26,7 @@ const organizationValidation = [
         .withMessage('Please provide a valid email address')
 ];
 
-const organizationsPage = async (req, res, next) => {
+const organizationsPage = async (req, res) => {
   const organizations = await getAllOrganizations();
   const meta = getMetaData(
     "Our Partner Organizations",
@@ -41,7 +41,7 @@ const organizationsPage = async (req, res, next) => {
   })
 };
 
-const organizationDetailsPage = async (req, res, next) => {
+const organizationDetailsPage = async (req, res) => {
     const organizationId = req.params.id;
     const organization = await getOrganizationDetails(organizationId);
     const projects = await getProjectsByOrganizationId(organizationId);
@@ -59,7 +59,7 @@ const organizationDetailsPage = async (req, res, next) => {
     });
 };
 
-const newOrganizationForm = async (req, res, next) => {
+const newOrganizationForm = async (req, res) => {
 
     const meta = getMetaData(
       "New Organization Form",
@@ -75,7 +75,7 @@ const newOrganizationForm = async (req, res, next) => {
     });
 }
 
-const processNewOrganizationForm = async (req, res, next) => {
+const processNewOrganizationForm = async (req, res) => {
 
     // check for validation errors
     const results = validationResult(req);
@@ -95,7 +95,7 @@ const processNewOrganizationForm = async (req, res, next) => {
     res.redirect(`/organization/${organizationId}`);
 };
 
-const editOrganizationForm = async (req, res, next) => {
+const editOrganizationForm = async (req, res) => {
       const organizationId = req.params.id;
       const organization = await getOrganizationDetails(organizationId);
       const meta = getMetaData(

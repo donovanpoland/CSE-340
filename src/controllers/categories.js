@@ -1,7 +1,7 @@
 import { getAllCategories, getCategoryById, getProjectsByCategoryId} from "../models/categories.js";
 import { getMetaData } from "../utils/meta.js";
 
-const categoriesPage = async (req, res, next) => {
+const categoriesPage = async (req, res) => {
     const categories = await getAllCategories();
     const meta = getMetaData(
         "Service Project Categories",
@@ -16,7 +16,7 @@ const categoriesPage = async (req, res, next) => {
     });
 };
 
-const categoryDetailsPage = async (req, res, next) => {
+const categoryDetailsPage = async (req, res) => {
     const categoryId = req.params.id;
     const category = await getCategoryById(categoryId);
     const projects = await getProjectsByCategoryId(categoryId);

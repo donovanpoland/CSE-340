@@ -1,11 +1,14 @@
-import { getUpcomingProjects, getProjectDetails } from "../models/projects.js";
+import { getUpcomingProjects, getProjectDetails, createProject } from "../models/projects.js";
+import { getAllOrganizations } from "../models/organizations.js";
 import { formatProjectDateTime } from "../utils/datetime.js";
 import { getMetaData } from "../utils/meta.js";
 import { getCategoriesByProjectId } from "../models/categories.js";
+import { body, validationResult} from 'express-validator';
+
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
-const projectsPage = async (req, res, next) => {
+const projectsPage = async (req, res) => {
     // get upcoming projects(limit)
     // feed array into a map to change the format of the date on each object
     const projects = (await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS))
@@ -28,7 +31,7 @@ const projectsPage = async (req, res, next) => {
     });
 };
 
-const projectDetailsPage = async (req, res, next) => {
+const projectDetailsPage = async (req, res) => {
     const { id } = req.params;
     const projectData = await getProjectDetails(id);
     const categories = await getCategoriesByProjectId(projectData.project_id);
@@ -39,7 +42,7 @@ const projectDetailsPage = async (req, res, next) => {
 
     const meta = getMetaData(
         `${project.title}`,
-        [project.title, "Service Projects", "volunteering", "community events"],
+        [project.title, "Service Projects", "Volunteering", "Community Events"],
         `View details for the ${project.title} service project.`
     );
 
@@ -52,6 +55,5 @@ const projectDetailsPage = async (req, res, next) => {
       });
   };
 
-
 // Export any controller functions
-export {projectsPage, projectDetailsPage};
+export {projectsPage, projectDetailsPage, showNewProjectForm};

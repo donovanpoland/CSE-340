@@ -1,7 +1,7 @@
 import { getMetaData } from "../utils/meta.js";
 
 // Define any controller functions
-const homePage = async (req, res, next) => {
+const homePage = async (req, res) => {
     const meta = getMetaData(
         "Home",
         ["home", "community service", "volunteering"],
