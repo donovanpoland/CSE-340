@@ -5,7 +5,6 @@ import { getMetaData } from "../utils/meta.js";
 import { getCategoriesByProjectId } from "../models/categories.js";
 import { body, validationResult} from 'express-validator';
 
-
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 const projectValidation = [
     body('title')
@@ -47,7 +46,7 @@ const projectsPage = async (req, res) => {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
-        projects: projects
+        projects
     });
 };
 
@@ -87,7 +86,7 @@ const newProjectForm = async (req, res) => {
             title: meta.title, 
             keywords: meta.keywords,
             desc: meta.desc,
-            organizations: organizations });
+            organizations });
 };
   
 const processNewProject = async (req, res) => {

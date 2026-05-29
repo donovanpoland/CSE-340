@@ -66,7 +66,7 @@
                 >
                     <option value="">Select an organization</option>
                     <% organizations.forEach(org => { %>
-                    <option value="<%= org.organization_id %>"><%= org.org_name %></option>
+                    <option value="<%= org.organization_id %>"><%= toTitleCase(org.org_name) %></option>
                     <% }); %>
                 </select>
                 </div>

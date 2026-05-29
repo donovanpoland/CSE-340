@@ -12,6 +12,7 @@ import { getMetaData } from "./src/utils/meta.js";
 // import express sessions
 import session from 'express-session';
 import flash from './src/middleware/flash.js';
+import { toTitleCase, capitalizeFirstLetter } from "./src/utils/formatter.js";
 
 
 // use the string stored in .env to display what enviroment is being worked inside of
@@ -33,6 +34,8 @@ const app = express();
 
 
 /**** Configure Express middleware ****/
+app.locals.toTitleCase = toTitleCase;
+app.locals.capitalizeFirstLetter = capitalizeFirstLetter;
 // Set up session management
 app.use(session({
     secret: SESSION_SECRET,

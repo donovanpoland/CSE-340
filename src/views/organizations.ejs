@@ -1,14 +1,14 @@
 <%- include('partials/head', { title, keywords, desc }) %>
 <%- include('partials/header') %>
 <main>
-    <h1><%= title %></h1>
+    <h1><%= toTitleCase(title) %></h1>
     <p class="lede">Here are a few of our partner organizations:</p>
     <ul class="rmv_liststyle">
         <% organizations.forEach(organization => { %>
         <li class="card">
-            <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.org_name %> logo">
+            <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
             <!-- <div>ID: <%= organization.organization_id %></div> -->
-            <a href="/organization/<%= organization.organization_id %>"><%= organization.org_name %></a>
+            <a href="/organization/<%= organization.organization_id %>"><%= toTitleCase(organization.org_name) %></a>
             <div>
                 <%= organization.contact_email %>
             </div>

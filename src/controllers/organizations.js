@@ -37,7 +37,7 @@ const organizationsPage = async (req, res) => {
     title: meta.title,
     keywords: meta.keywords,
     desc: meta.desc,
-    organizations: organizations
+    organizations
   })
 };
 
@@ -54,8 +54,8 @@ const organizationDetailsPage = async (req, res) => {
       title: meta.title,
       keywords: meta.keywords,
       desc: meta.desc,
-      organization: organization,
-      projects: projects
+      organization,
+      projects
     });
 };
 
@@ -108,7 +108,7 @@ const editOrganizationForm = async (req, res) => {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
-        organization: organization
+        organization
       });
 };
 

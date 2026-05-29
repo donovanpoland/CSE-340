@@ -1,24 +1,24 @@
 <%- include('partials/head', { title, keywords, desc }) %>
 <%- include('partials/header') %>
     <main>
-        <h1><%= title %></h1>
+        <h1><%= toTitleCase(title)%></h1>
         <h2>Upcoming Service Projects</h2>
         <ul>
             <% projects.forEach(project => { %>
                 <li class="card">
                         <a href="/project/<%= project.project_id%>">
-                            <strong><%= project.title %></strong>
+                            <strong><%= toTitleCase(project.title) %></strong>
                             <br>
                             <%= project.project_datetime %>
                         </a>
                         <div>
                             <span>
-                                <a href="/organization/<%= project.organization_id %>">Organized By <%= project.organization_name%></a>
+                                <a href="/organization/<%= project.organization_id %>">Organized By <%= toTitleCase(project.organization_name) %></a>
                             </span>
                         </div>
                         <div>
                             <span>
-                                Located in <%= project.event_location %>
+                                Located in <%= toTitleCase(project.event_location) %>
                             </span>
                         </div>
                 </li>
