@@ -75,7 +75,7 @@ const newOrganizationForm = async (req, res) => {
     });
 }
 
-const processNewOrganizationForm = async (req, res) => {
+const processNewOrganization = async (req, res) => {
 
     // check for validation errors
     const results = validationResult(req);
@@ -112,7 +112,7 @@ const editOrganizationForm = async (req, res) => {
       });
 };
 
-const processEditOrganizationForm = async (req, res) => {
+const processEditOrganization = async (req, res) => {
 
     const organizationId = req.params.id;
 
@@ -143,8 +143,8 @@ export {
   organizationsPage, 
   organizationDetailsPage, 
   newOrganizationForm, 
-  processNewOrganizationForm,
+  processNewOrganization,
   organizationValidation,
   editOrganizationForm,
-  processEditOrganizationForm
+  processEditOrganization
 };

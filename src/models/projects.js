@@ -86,4 +86,37 @@ const getProjectsByOrganizationId = async (organizationId) => {
       return result.rows;
 };
 
-export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails};
+const createProject = async (
+    title, 
+    description, 
+    location, 
+    dateTime, 
+    timezone, 
+    organizationId) => {
+    // $4 is the date and time given from the user via html date type
+    // cast to timestamp value for the database
+    // Then ad the timezone with $5
+    // example string would look like: '2026-06-10T09:00'::timestamp AT TIME ZONE 'America/Denver'
+    const timestampTzExpression = "$4::timestamp AT TIME ZONE $5"
+
+    const query = `
+          INSERT INTO projects (${pTitle}, ${pDesc}, ${pLoc}, ${pdt}, ${orId})
+          VALUES ($1, $2, $3, ${timestampTzExpression}, $6)
+          RETURNING ${pId};
+        `;
+    
+    const queryParams = [title, description, location, dateTime, timezone, organizationId];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Created new project with ID:', result.rows[0].project_id);
+    }
+
+    return result.rows[0].project_id;
+};
+
+export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails, createProject};
