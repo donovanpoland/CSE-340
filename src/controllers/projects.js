@@ -86,7 +86,8 @@ const newProjectForm = async (req, res) => {
             title: meta.title, 
             keywords: meta.keywords,
             desc: meta.desc,
-            organizations });
+            organizations,
+         });
 };
   
 const processNewProject = async (req, res) => {
@@ -110,7 +111,7 @@ const processNewProject = async (req, res) => {
         const newProjectId = await createProject(title, description, location, dateTime, timezone, organizationId);
 
         req.flash('success', 'New service project created successfully!');
-        res.redirect(`/project/${newProjectId}`);
+        res.redirect(`/assign-categories/${newProjectId}`);
     } catch (error) {
         console.error('Error creating new project:', error);
         req.flash('error', 'There was an error creating the service project.');
