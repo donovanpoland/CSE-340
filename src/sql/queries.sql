@@ -8,6 +8,8 @@ SELECT * FROM projects;
 
 SELECT * FROM categories;
 
+SELECT * FROM project_categories;
+
 
 
 ------ ALTER Tables ------
@@ -58,3 +60,7 @@ ALTER TABLE categories
 -- Delete test organizations
 DELETE FROM organization
   WHERE organization_id = <change this numnber>;
+
+-- add timezone column to projects with a defualt value - back fill
+ALTER TABLE projects
+  ADD COLUMN project_timezone VARCHAR(64) NOT NULL DEFAULT 'America/Denver';

@@ -1,11 +1,12 @@
-import { getUpcomingProjects, getProjectDetails, createProject } from "../models/projects.js";
+import { getUpcomingProjects, getProjectDetails, createProject, updateProject,  } from "../models/projects.js";
 import { getAllOrganizations } from "../models/organizations.js";
-import { formatProjectDateTime } from "../utils/datetime.js";
+import { formatProjectDateTime, formatDateTimeLocalInput } from "../utils/datetime.js";
 import { getMetaData } from "../utils/meta.js";
 import { getCategoriesByProjectId } from "../models/categories.js";
 import { body, validationResult} from 'express-validator';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
+const SUPPORTED_TIMEZONES = Intl.supportedValuesOf("timeZone");
 const projectValidation = [
     body('title')
         .trim()
@@ -18,10 +19,20 @@ const projectValidation = [
     body('location')
         .trim()
         .notEmpty().withMessage('Location is required')
-        .isLength({ max: 200 }).withMessage('Location must be less than 200 characters'),
+        .custom((value) => {
+              if (/^\d+$/.test(value.trim())) {
+                throw new Error("Location cannot be only numbers");
+              }
+        
+              return true;
+            })
+        .isLength({ min: 3, max: 200 }).withMessage('Location must be between 3 and 200 characters'),
     body('dateTime')
         .notEmpty().withMessage('Date is required')
         .isISO8601().withMessage('Date must be a valid date format'),
+    body('timezone')
+        .notEmpty().withMessage('Timezone is required')
+        .isIn(SUPPORTED_TIMEZONES).withMessage('Timezone must be a valid supported timezone'), 
     body('organizationId')
         .notEmpty().withMessage('Organization is required')
         .isInt().withMessage('Organization must be a valid integer')
@@ -33,7 +44,7 @@ const projectsPage = async (req, res) => {
     const projects = (await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS))
     .map((project) => ({
         ...project, //all object data
-        project_datetime: formatProjectDateTime(project.project_datetime)
+        project_datetime: formatProjectDateTime(project.project_datetime, project.project_timezone)
     }));
     
     const meta = getMetaData(
@@ -56,7 +67,7 @@ const projectDetailsPage = async (req, res) => {
     const categories = await getCategoriesByProjectId(projectData.project_id);
     const project = {
         ...projectData, //all object data
-        project_datetime: formatProjectDateTime(projectData.project_datetime)
+        project_datetime: formatProjectDateTime(projectData.project_datetime, projectData.project_timezone)
     };
 
     const meta = getMetaData(
@@ -87,6 +98,7 @@ const newProjectForm = async (req, res) => {
             keywords: meta.keywords,
             desc: meta.desc,
             organizations,
+            timezones: SUPPORTED_TIMEZONES
          });
 };
   
@@ -119,5 +131,52 @@ const processNewProject = async (req, res) => {
     }
 };
 
+const editProjectForm = async(req, res) => {
+    const projectId = req.params.id;
+    const project = await getProjectDetails(projectId);
+    const organizations = await getAllOrganizations();
+    project.dateTimeInput = formatDateTimeLocalInput(
+        project.project_datetime,
+        project.project_timezone
+      );
+
+    const meta = getMetaData(
+            "Edit project Form",
+            ["edit project details", `${project.title}`],
+            "Edit your project information here."
+          );
+    res.render('edit-project', { 
+            title: meta.title,
+            keywords: meta.keywords,
+            desc: meta.desc,
+            timezones: SUPPORTED_TIMEZONES,
+            organizations,
+            project
+          });
+};
+
+const processEditedProject = async(req, res) => {
+    const projectId = req.params.id;
+
+    // check for validation errors
+        const results = validationResult(req);
+        if(!results.isEmpty()){
+          results.array().forEach((error) => {
+            req.flash('error', error.msg);
+          });
+          // redirect back to the new organization form
+          return res.redirect(`/edit-project/${projectId}`);
+        }
+
+
+    const {title, description, dateTime, timezone, location, organizationId} = req.body
+    await updateProject(projectId, title, description, dateTime, timezone, location, organizationId);
+
+    //set a success flash message
+    req.flash('success', 'Project updated successfully!')
+
+    res.redirect(`/project/${projectId}`);
+};
+
 // Export any controller functions
-export {projectsPage, projectDetailsPage, newProjectForm, processNewProject, projectValidation};
+export {projectsPage, projectDetailsPage, newProjectForm, processNewProject, projectValidation, editProjectForm, processEditedProject};

@@ -9,8 +9,8 @@ import {
 } from "./controllers/organizations.js";
 
 import { 
-    projectsPage, projectDetailsPage, newProjectForm,
-    processNewProject, projectValidation
+    projectsPage, projectDetailsPage, newProjectForm, editProjectForm,
+    processNewProject, processEditedProject, projectValidation
 } from "./controllers/projects.js";
 
 import { categoriesPage, categoryDetailsPage, processAssignedCategories, assignCategoriesForm} from "./controllers/categories.js";
@@ -33,8 +33,8 @@ router.get('/project/:id', projectDetailsPage); // open specific project by id p
 router.get('/new-project', newProjectForm);// open form page to add new project
 // validate and process new project submital then redirect to category assignment form upon success
 router.post('/new-project', projectValidation, processNewProject, assignCategoriesForm); 
-// router.get('/edit_project/:id', ); // open form page to edit a project by id
-// router.post('/edit-project/:id', ); // validate and process edited project submital
+router.get('/edit-project/:id', editProjectForm); // open form page to edit a project by id
+router.post('/edit-project/:id', projectValidation, processEditedProject); // validate and process edited project submital
 
 // categories
 router.get('/categories', categoriesPage); // open categories list page
@@ -45,7 +45,6 @@ router.post('/assign-categories/:projectId', processAssignedCategories); // proc
 // router.post('/new-category', ); // validate and proccess new category submital
 // router.get('/edit-category/:id', ); // open form page to edit a category by id
 // router.post('/edit-category/:id', ); // validate and proccess edited category submital
-
 
 
 // error-handling routes

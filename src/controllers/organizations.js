@@ -101,7 +101,7 @@ const editOrganizationForm = async (req, res) => {
       const meta = getMetaData(
         "Edit Organization Form",
         ["edit organization details", `${organization.org_name}`],
-        "Edit your information here."
+        "Edit your organization information here."
       );
   
       res.render('edit-organization', { 
