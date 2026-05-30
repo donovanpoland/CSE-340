@@ -33,7 +33,7 @@ const organizationsPage = async (req, res) => {
     ["partner organizations", "community partners", "nonprofits"],
     "Learn about the organizations connected to service projects in this network."
   );
-  res.render("organizations", {
+  res.render("organizations/organizations", {
     title: meta.title,
     keywords: meta.keywords,
     desc: meta.desc,
@@ -50,7 +50,7 @@ const organizationDetailsPage = async (req, res) => {
       ["organization details", "partner organization", "service projects", `${organization.org_name}`],
       `Learn about ${organization.org_name} and its related service projects.`
     );
-    res.render("organization", {
+    res.render("organizations/organization", {
       title: meta.title,
       keywords: meta.keywords,
       desc: meta.desc,
@@ -67,7 +67,7 @@ const newOrganizationForm = async (req, res) => {
       "Enter your organization detils here to be listed."
     );
 
-    res.render('new-organization', { 
+    res.render('organizations/new-organization', { 
       title: meta.title,
       keywords: meta.keywords,
       desc: meta.desc,
@@ -104,7 +104,7 @@ const editOrganizationForm = async (req, res) => {
         "Edit your organization information here."
       );
   
-      res.render('edit-organization', { 
+      res.render('organizations/edit-organization', { 
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
@@ -123,7 +123,7 @@ const processEditOrganization = async (req, res) => {
         req.flash('error', error.msg);
       });
       // redirect back to the new organization form
-      return res.redirect(`/edit-organization/${organizationId}.`);
+      return res.redirect(`/edit-organization/${organizationId}`);
     }
 
     const { name, description, contactEmail} = req.body;

@@ -1,5 +1,5 @@
-<%- include('partials/head', { title, keywords, desc}) %>
-<%- include('partials/header') %>
+<%- include('../partials/head', { title, keywords, desc}) %>
+<%- include('../partials/header') %>
     <main>
         <h1><%= toTitleCase(title) %></h1>
         <ul class="rmv_liststyle">
@@ -15,4 +15,4 @@
         <a href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
         <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
     </main>
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

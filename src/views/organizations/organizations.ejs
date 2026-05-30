@@ -1,5 +1,5 @@
-<%- include('partials/head', { title, keywords, desc }) %>
-<%- include('partials/header') %>
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
 <main>
     <h1><%= toTitleCase(title) %></h1>
     <p class="lede">Here are a few of our partner organizations:</p>
@@ -17,4 +17,4 @@
     </ul>
     <p><a href="/new-organization">Add a new organization</a></p>
 </main>
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

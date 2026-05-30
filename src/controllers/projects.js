@@ -53,7 +53,7 @@ const projectsPage = async (req, res) => {
         "View the next five upcoming service projects and their event details."
     );
 
-    res.render("projects", {
+    res.render("projects/projects", {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
@@ -76,7 +76,7 @@ const projectDetailsPage = async (req, res) => {
         `View details for the ${project.title} service project.`
     );
 
-    res.render("project", {
+    res.render("projects/project", {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
@@ -93,7 +93,7 @@ const newProjectForm = async (req, res) => {
             `Enter details for the your new service project.`
         );
     
-        res.render('new-project', { 
+        res.render('projects/new-project', { 
             title: meta.title, 
             keywords: meta.keywords,
             desc: meta.desc,
@@ -145,7 +145,7 @@ const editProjectForm = async(req, res) => {
             ["edit project details", `${project.title}`],
             "Edit your project information here."
           );
-    res.render('edit-project', { 
+    res.render('ptojects/edit-project', { 
             title: meta.title,
             keywords: meta.keywords,
             desc: meta.desc,

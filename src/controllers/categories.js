@@ -9,7 +9,7 @@ const categoriesPage = async (req, res) => {
         ["project categories", "service types", "volunteering"],
         "Browse service project categories to find the type of work you want to do."
     );
-    res.render("categories", {
+    res.render("categories/categories", {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
@@ -27,7 +27,7 @@ const categoryDetailsPage = async (req, res) => {
         `View details for the ${category.cat_name} category and its related service projects.`
     );
 
-    res.render("category", {
+    res.render("categories/category", {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
@@ -51,7 +51,7 @@ const assignCategoriesForm = async (req, res) => {
 
     const title = 'Assign Categories to Project';
 
-    res.render('assign-categories', 
+    res.render('categories/assign-categories', 
         { 
         title: meta.title,
         keywords: meta.keywords,

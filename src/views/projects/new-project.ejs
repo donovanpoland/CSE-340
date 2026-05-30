@@ -1,9 +1,9 @@
-<%- include('partials/head', { title, keywords, desc}) %>
-<%- include('partials/header') %>
+<%- include('../partials/head', { title, keywords, desc}) %>
+<%- include('../partials/header') %>
     <main>
-        <h1><%= toTitleCase(title) %></h1>
+        <h1><%= title %></h1>
 
-        <form action="/edit-project/<%= project.project_id %>" method="POST">
+        <form action="/new-project" method="POST">
             <fieldset>
                 <div class="form-group">
                 <label for="title">Project Title</label>
@@ -13,7 +13,6 @@
                     name="title"
                     maxlength="150"
                     required
-                    value="<%= project.title %>"
                 />
                 </div>
 
@@ -24,7 +23,7 @@
                     name="description"
                     maxlength="500"
                     required
-                ><%= project.proj_description %></textarea>
+                ></textarea>
                 </div>
 
                 <div class="form-group">
@@ -35,7 +34,6 @@
                     name="location"
                     maxlength="255"
                     required
-                    value="<%= project.event_location %>"
                 />
                 </div>
 
@@ -46,7 +44,6 @@
                     id="dateTime"
                     name="dateTime"
                     required
-                    value="<%= project.dateTimeInput %>"
                 />
                 </div>
 
@@ -57,7 +54,7 @@
                         id="timezone"
                         name="timezone"
                         list="timezone-options"
-                        value="<%= project.project_timezone %>"
+                        value="America/Denver"
                         required
                       />
                     
@@ -75,17 +72,13 @@
                     name="organizationId"
                     required
                 >
+                    <option value="">Select an organization</option>
                     <% organizations.forEach(org => { %>
-                        <option
-                          value="<%= org.organization_id %>"
-                          <%= org.organization_id === project.organization_id ? "selected" : "" %>
-                        >
-                          <%= toTitleCase(org.org_name) %>
-                        </option>
-                      <% }); %>
+                    <option value="<%= org.organization_id %>"><%= toTitleCase(org.org_name) %></option>
+                    <% }); %>
                 </select>
             </fieldset>
-            <button type="submit">Finish Edit</button>
+            <button type="submit">Create Project</button>
         </form>
 </main>
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>

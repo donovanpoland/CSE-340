@@ -1,5 +1,5 @@
-<%- include('partials/head', { title, keywords, desc}) %>
-<%- include('partials/header') %>
+<%- include('../partials/head', { title, keywords, desc}) %>
+<%- include('../partials/header') %>
     <main>
         <h1><%= toTitleCase(category.cat_name) %></h1>
         <p><%= capitalizeFirstLetter(category.cat_description) %></p>
@@ -13,4 +13,4 @@
             <% }) %>
         </ul>
     </main>
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>
