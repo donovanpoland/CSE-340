@@ -1,20 +1,20 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
-<main>
+<main class="grid">
     <h1><%= toTitleCase(title) %></h1>
-    <p class="lede">Here are a few of our partner organizations:</p>
-    <ul class="rmv_liststyle">
+    <p>Here are a few of our partner organizations:</p>
+    <ul class="grid rmv_liststyle">
         <% organizations.forEach(organization => { %>
-        <li class="card">
-            <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
-            <!-- <div>ID: <%= organization.organization_id %></div> -->
-            <a href="/organization/<%= organization.organization_id %>"><%= toTitleCase(organization.org_name) %></a>
-            <div>
+        <li class="grid card">
+                <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
+                <!-- <div>ID: <%= organization.organization_id %></div> -->
+                <a class="link center" href="/organization/<%= organization.organization_id %>"><%= toTitleCase(organization.org_name) %></a>
+            <div class="center">
                 <%= organization.contact_email %>
             </div>
         </li>
         <% }); %>
     </ul>
-    <p><a href="/new-organization">Add a new organization</a></p>
+    <a class="btn" href="/new-organization">Add a new organization</a>
 </main>
 <%- include('../partials/footer') %>

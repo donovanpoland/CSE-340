@@ -145,7 +145,7 @@ const editProjectForm = async(req, res) => {
             ["edit project details", `${project.title}`],
             "Edit your project information here."
           );
-    res.render('ptojects/edit-project', { 
+    res.render('projects/edit-project', { 
             title: meta.title,
             keywords: meta.keywords,
             desc: meta.desc,

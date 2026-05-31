@@ -1,21 +1,34 @@
-<body> <!-- body end tag in footer -->
-    <header>
-        <nav aria-label="Primary navigation">
-            <button class="nav-toggle" id="ham-btn" type="button" aria-controls="nav-bar" aria-label="Toggle navigation">
-                <span class="nav-toggle__label">Menu</span>
-                <span class="nav-toggle__icon" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-            </button>
-            <ul id="nav-bar">
+<body class="grid"> <!-- body end tag in footer -->
+    <header class="grid center">
+        <div class="flex-row">
+            <a class="link" id="logo" href="/">
+                <img 
+                    src="/images/sn-logo93x100.webp" 
+                    alt="Server Network Logo"
+                    width="93"
+                    height="100"
+                    loading="eager"
+                    fetchpriority="high"
+                    title="Home"
+                />
+            </a>
+            <!-- site Name -->
+            <span id="site-name" class="center">Service Network</span>
+        </div>
+        <nav class="center" aria-label="navigation" id="nav-bar">
+            <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/organizations">Organizations</a></li>
                 <li><a href="/projects">Projects</a></li>
                 <li><a href="/categories">Categories</a></li>
             </ul>
         </nav>
+        <button
+            id="ham-btn"
+            class="hamburger"
+            aria-label="navigation"
+            title="Menu"
+        ></button>
     </header>
     <% const messages = flash(); %>
         <% Object.keys(messages).forEach(type => { %>

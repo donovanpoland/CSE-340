@@ -1,11 +1,11 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
-    <main>
+    <main class="grid">
         <h1><%= toTitleCase(title) %></h1>
-        <ul class="rmv_liststyle">
+        <ul class="grid rmv_liststyle">
             <% categories.forEach(category => { %>
                 <li class="card">
-                    <strong><a href="/category/<%= category.category_id %>"><%= toTitleCase(category.cat_name) %></a></strong>
+                    <strong><a class="link" href="/category/<%= category.category_id %>"><%= toTitleCase(category.cat_name) %></a></strong>
                 </li>
             <% }); %>
         </ul>

@@ -5,7 +5,7 @@ const navBar = document.querySelector('#nav-bar');
 if (navButton && navBar) {
     navButton.addEventListener('click', () => {
         navButton.classList.toggle('show');
-        navBar.classList.toggle('show');
+        navBar.classList.toggle('show');   
     });
 
     // Listen for window resize and remove show class

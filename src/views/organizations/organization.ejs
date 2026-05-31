@@ -1,17 +1,17 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
-<main>
+<main class="grid">
     <h1><%= toTitleCase(title) %></h1>
     <h2><%= toTitleCase(organization.org_name) %></h2>
     <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
     <p><strong>Description</strong>: <%= capitalizeFirstLetter(organization.org_description) %></p>
     <p><strong>Email</strong>: <%= organization.contact_email %></p>
     <h3>Service Projects</h3>
-    <ul class="rmv_liststyle">
+    <ul class="grid rmv_liststyle">
         <% projects.forEach(project => { %>
-        <li class="card"><a href="/project/<%= project.project_id %>"><%= toTitleCase(project.title) %></a></li>
+        <li class="grid card"><a class="link" href="/project/<%= project.project_id %>"><%= toTitleCase(project.title) %></a></li>
         <% }); %>
     </ul>
-    <a href="/edit-organization/<%= organization.organization_id %>">Edit this organization</a>
+    <a class="btn" href="/edit-organization/<%= organization.organization_id %>">Edit this organization</a>
 </main>
 <%- include('../partials/footer') %>

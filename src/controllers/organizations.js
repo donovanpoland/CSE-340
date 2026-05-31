@@ -29,7 +29,7 @@ const organizationValidation = [
 const organizationsPage = async (req, res) => {
   const organizations = await getAllOrganizations();
   const meta = getMetaData(
-    "Our Partner Organizations",
+    "Partner Organizations",
     ["partner organizations", "community partners", "nonprofits"],
     "Learn about the organizations connected to service projects in this network."
   );

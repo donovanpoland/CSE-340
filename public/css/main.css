@@ -1,0 +1,92 @@
+
+body {
+    grid-template-columns: 1fr;
+    padding: var(--space-xsm);
+    width: 100%;
+    background-color: var(--color-bg);
+    grid-template-areas: 
+    "header"
+    "span" 
+    "nav";
+}
+
+html, body, main, header, footer{
+    min-width: 320px;
+}
+
+img {
+    display: flex;
+    border-radius: var(--radius);
+    height: auto;
+    max-width: 100%;
+}
+
+h1{
+    font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+h2{
+    font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+h1, h2, h3 {
+    color: var(--color-heading);
+}
+
+main {
+    padding: var(--space-xs);
+    display: grid;
+    gap: var(--space-sm);
+    justify-content: stretch;
+
+    & li {
+        grid-template-columns: 100px auto auto;
+    }
+}
+
+
+/* forms */
+
+form {
+    width: min(100%, 38rem);
+    justify-self: left;
+}
+
+fieldset{
+    @media only screen and (min-width: 38em) {
+        grid-template-columns: 1fr;
+    }
+}
+
+label{
+    display: flex;
+    flex-direction: column;
+    
+    input[type="text"], input[type="email"], input[type="datetime-local"], select, option, textarea{
+        border-radius: var(--radius-xsm);
+        padding: var(--space-2xs);
+        font-size: 1rem;
+    }
+}
+
+#checkbox-label{
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+ }
+
+
+textarea{
+    width: 100%;
+    min-height: 8rem;
+    resize: vertical;
+    border-radius: var(--radius-xsm);
+}
+
+#submit{
+    grid-column: -2 / -1;
+}

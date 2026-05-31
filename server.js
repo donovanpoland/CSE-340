@@ -72,6 +72,13 @@ app.use((req, res, next) => {
 app.use(router);
 
 
+// Chrome DevTools probes for an optional workspace configuration file.
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+    console.log(`Chrome DevTools are active status:${res.statusCode}`);
+    res.sendStatus(204);
+});
+
+
 // *** Error handlers *** //
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
@@ -116,11 +123,10 @@ app.use((err, req, res, next) => {
 app.listen(PORT, async () => {
   try {
     await testConnection();
-    console.log(`Server is running at ${PROTO}:${IP}:${PORT}`);
+    console.log(`Server is running at ${PROTO}${IP}:${PORT}`);
     console.log(`Environment: ${NODE_ENV}`);
   } catch (error) {
     console.error('Error connecting to the database:', error);
   }
 });
-
 
