@@ -66,7 +66,9 @@ if (process.env.NODE_ENV === 'development' && process.env.ENABLE_SQL_LOGGING ===
                 throw error;
             }
         },
-
+        connect() {
+              return pool.connect();
+        },
         async close() {
             await pool.end();
         }

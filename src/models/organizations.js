@@ -59,7 +59,7 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
     const query = `
       INSERT INTO organization (${orName}, ${orDesc}, ${email}, ${fileName})
       VALUES ($1, $2, $3, $4)
-      RETURNING organization_id
+      RETURNING ${orId};
     `;
 
     const queryParams = [name, description, contactEmail, logoFilename];
@@ -70,32 +70,33 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
     }
 
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new organization with ID:', result.rows[0].organization_id);
+        console.log('Created new organization with ID:', result.rows[0][orId]);
     }
 
-    return result.rows[0].organization_id;
+    return result.rows[0][orId];
 };
 
-const updateOrganization = async (organizationId, name, description, contactEmail, logoFilename) => {
-  const query = `
-    UPDATE organization
-    SET ${orName} = $1, ${orDesc} = $2, ${email} = $3, ${fileName} = $4
-    WHERE ${orId} = $5
-    RETURNING ${orId};
-  `;
+const updateOrganization = async (organizationId, name, description, contactEmail) => {
+    const query = `
+      UPDATE organization
+      SET ${orName} = $1, ${orDesc} = $2, ${email} = $3
+      WHERE ${orId} = $4
+      RETURNING ${orId};
+    `;
+    const queryParams = [name, description, contactEmail, organizationId];
+    const result = await db.query(query, queryParams);
+    if (result.rows.length === 0) {
+      throw new Error('Organization not found');
+    }
 
-  const queryParams = [name, description, contactEmail, logoFilename, organizationId];
-  const result = await db.query(query, queryParams);
-
-  if (result.rows.length === 0) {
-    throw new Error('Organization not found');
-  }
-
-  if (process.env.ENABLE_SQL_LOGGING === 'true') {
-    console.log('Updated organization with ID:', organizationId);
-  }
-
-  return result.rows[0].organization_id;
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+      console.log('Updated organization with ID:', organizationId);
+    }
+    return result.rows[0][orId];
 };
 
-export {getAllOrganizations, getOrganizationDetails, createOrganization, updateOrganization};
+export {
+  getAllOrganizations,
+  getOrganizationDetails,
+  createOrganization,
+  updateOrganization};

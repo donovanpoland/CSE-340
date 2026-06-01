@@ -1,0 +1,32 @@
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
+    <main>
+        <h1><%= title %></h1>
+        <form action="/new-category" method="POST" class="grid">
+            <fieldset class="grid card">
+            
+                <label for="name">Category Name
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name"
+                        maxlength="100"
+                        required
+                        >
+                </label>
+
+                <label for="description">Description
+                    <textarea
+                        id="description"
+                        name="description"
+                        required
+                        maxlength="500"
+                    ></textarea>
+                </label>
+                
+
+                <button class="btn" type="submit" id="submit">Create Category</button>
+            </fieldset>
+        </form>
+    </main>
+<%- include('../partials/footer') %>

@@ -10,6 +10,7 @@
                         type="text"
                         id="name"
                         name="name"
+                        maxlength="150"
                         required
                     />
                 </label>
@@ -19,8 +20,7 @@
                         id="description"
                         name="description"
                         required
-                        minlength="3"
-                        maxlength="150"
+                        maxlength="500"
                     ></textarea>
                 </label>
 
@@ -31,11 +31,11 @@
                         id="contactEmail"
                         name="contactEmail"
                         required
-                        maxlength="500"
+                        maxlength="255"
                     />
                 </label>
 
-                <button class="btn" type="submit">Create Organization</button>
+                <button class="btn" type="submit" id="submit">Create Organization</button>
             </fieldset>
         </form>
     </main>
