@@ -12,6 +12,8 @@ SELECT * FROM project_categories;
 
 SELECT * FROM roles;
 
+SELECT * FROM users;
+
 ------ ALTER Tables ------
 -- Do not run these as part of setup
 

@@ -62,7 +62,7 @@ label{
     display: flex;
     flex-direction: column;
     
-    input[type="text"], input[type="email"], input[type="datetime-local"], select, option, textarea{
+    input[type="text"], input[type="email"], input[type="password"], input[type="datetime-local"], select, option, textarea{
         border-radius: var(--radius-xsm);
         padding: var(--space-2xs);
         font-size: 1rem;

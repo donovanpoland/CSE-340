@@ -3,19 +3,26 @@ import express, { Router } from "express";
 
 // import routes
 import { homePage } from "./controllers/index.js";
+
+// Organizations
 import { 
     organizationsPage, organizationDetailsPage, newOrganizationForm, editOrganizationForm,
     processNewOrganization, processEditOrganization, organizationValidation
 } from "./controllers/organizations.js";
 
+// Projects
 import { 
     projectsPage, projectDetailsPage, newProjectForm, editProjectForm,
     processNewProject, processEditedProject, projectValidation
 } from "./controllers/projects.js";
 
+// Categories
 import { categoriesPage, categoryDetailsPage, assignCategoriesForm, newCategoryForm, editCategoryForm,
      processAssignedCategories, processNewCategory, processEditCategory, categoryValidation
 } from "./controllers/categories.js";
+
+// Users
+import { userRegistrationForm, processUserRegistration } from "./controllers/users.js";
 
 import { testErrorPage } from "./controllers/errors.js";
 const router = express.Router();
@@ -49,6 +56,9 @@ router.post('/new-category', categoryValidation, processNewCategory); // validat
 router.get('/edit-category/:id', editCategoryForm); // open form page to edit a category by id
 router.post('/edit-category/:id', categoryValidation, processEditCategory ); // validate and process edited category submital
 
+//users
+router.get('/register', userRegistrationForm);
+router.post('/register', processUserRegistration);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

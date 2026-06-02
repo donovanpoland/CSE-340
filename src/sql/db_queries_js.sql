@@ -198,3 +198,9 @@ RETURNING category_id;
 -- *** db.js query *** --
 -- test database connection (testConnection)
 SELECT NOW() AS current_time;
+
+-- *** users.js queries *** --
+-- create user (createUser)
+INSERT INTO users (name, email, password_hash, role_id) 
+    VALUES ($1, $2, $3, (SELECT role_id FROM roles WHERE role_name = $4)) 
+    RETURNING user_id;

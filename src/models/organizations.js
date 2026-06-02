@@ -1,23 +1,23 @@
 import db from './db.js';
 
 //if database columns change update here to update all queries
-const orId = "organization_id";
-const orName = "org_name";
-const orDesc = "org_description";
-const email = "contact_email";
-const fileName = "logo_filename";
+const organizationId = "organization_id";
+const organizationName = "org_name";
+const organizationDescription = "org_description";
+const organizationEmail = "contact_email";
+const organizationFilename = "logo_filename";
 
 // Gets all organizations with summary details,
 // ordered alphabetically by organization name.
 const getAllOrganizations = async() => {
     const query = `
         SELECT 
-            org.${orId},
-            org.${orName}, 
-            org.${email}, 
-            org.${fileName}
+            org.${organizationId},
+            org.${organizationName}, 
+            org.${organizationEmail}, 
+            org.${organizationFilename}
         FROM public.organizations org
-        ORDER BY org.${orName} ASC;
+        ORDER BY org.${organizationName} ASC;
     `;
 
     // Runs the query and stores all organization rows from the database.
@@ -30,13 +30,13 @@ const getAllOrganizations = async() => {
 const getOrganizationDetails = async (organizationId) => {
       const query = `
       SELECT
-        org.${orId},
-        org.${orName},
-        org.${orDesc},
-        org.${email},
-        org.${fileName}
+        org.${organizationId},
+        org.${organizationName},
+        org.${organizationDescription},
+        org.${organizationEmail},
+        org.${organizationFilename}
       FROM public.organizations org
-      WHERE org.${orId} = $1;
+      WHERE org.${organizationId} = $1;
     `;
 
       const queryParams = [organizationId];
@@ -51,15 +51,15 @@ const getOrganizationDetails = async (organizationId) => {
  * Creates a new organization in the database.
  * @param {string} name - The name of the organization.
  * @param {string} description - A description of the organization.
- * @param {string} contactEmail - The contact email for the organization.
+ * @param {string} contactEmail - The contact organizationEmail for the organization.
  * @param {string} logoFilename - The filename of the organization's logo.
  * @returns {string} The id of the newly created organization record.
  */
 const createOrganization = async (name, description, contactEmail, logoFilename) => {
     const query = `
-      INSERT INTO organizations (${orName}, ${orDesc}, ${email}, ${fileName})
+      INSERT INTO organizations (${organizationName}, ${organizationDescription}, ${organizationEmail}, ${organizationFilename})
       VALUES ($1, $2, $3, $4)
-      RETURNING ${orId};
+      RETURNING ${organizationId};
     `;
 
     const queryParams = [name, description, contactEmail, logoFilename];
@@ -70,18 +70,18 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
     }
 
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new organization with ID:', result.rows[0][orId]);
+        console.log('Created new organization with ID:', result.rows[0][organizationId]);
     }
 
-    return result.rows[0][orId];
+    return result.rows[0][organizationId];
 };
 
 const updateOrganization = async (organizationId, name, description, contactEmail) => {
     const query = `
       UPDATE organizations
-      SET ${orName} = $1, ${orDesc} = $2, ${email} = $3
-      WHERE ${orId} = $4
-      RETURNING ${orId};
+      SET ${organizationName} = $1, ${organizationDescription} = $2, ${organizationEmail} = $3
+      WHERE ${organizationId} = $4
+      RETURNING ${organizationId};
     `;
     const queryParams = [name, description, contactEmail, organizationId];
     const result = await db.query(query, queryParams);
@@ -92,7 +92,7 @@ const updateOrganization = async (organizationId, name, description, contactEmai
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
       console.log('Updated organization with ID:', organizationId);
     }
-    return result.rows[0][orId];
+    return result.rows[0][organizationId];
 };
 
 export {

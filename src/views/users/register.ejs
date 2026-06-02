@@ -1,0 +1,55 @@
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
+    <main>
+        <h1><%= title %></h1>
+        <form action="/register" method="POST" class="grid">
+            <fieldset class="grid card">
+            
+                <label for="name">Name
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                        >
+                </label>
+
+                <label for="email">Email
+                    <input 
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                    >
+                </label>
+
+                <label for="password">Password
+                    <input 
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    >
+                </label>
+
+                <label for="organizationId">Organization (optional)
+                    <select
+                        id="organizationId"
+                        name="organizationId"
+                    >
+                        <option value="">Select an organization</option>
+                            <% organizations.forEach(org => { %>
+                        <option value="<%= org.organization_id %>"><%= toTitleCase(org.org_name) %></option>
+                        <% }); %>
+                    </select>
+                </label>
+                
+
+                <button class="btn" type="submit" id="submit">Register</button>
+            </fieldset>
+        </form>
+    </main>
+<%- include('../partials/footer') %>

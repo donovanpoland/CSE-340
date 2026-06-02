@@ -90,7 +90,7 @@ header {
 
             & a {
                 background-color: var(--color-accent);
-                color: var(---color-accent);
+                color: var(--color-surface-muted);
                 border: var(--border-xsm) solid var(--color-accent);
                 font-size: 1em;
                 padding: var(--space-2xs);
@@ -100,6 +100,7 @@ header {
                 align-self: center;
 
                 @media only screen and (min-width: 38em) {
+                    color: var(---color-accent);
                     border: var(--border-xsm) solid var(--color-accent);
                     border-radius: var(--radius-sm);
 

@@ -1,22 +1,22 @@
 import db from './db.js';
 
 // If database columns change update here to update all queries
-const cId = "category_id";
-const cName = "cat_name";
-const cDesc = "cat_description";
-const pId = "project_id"
-const pTitle = "title";
+const categoryId = "category_id";
+const categoryName = "cat_name";
+const categoryDescription = "cat_description";
+const projectId = "project_id"
+const projectTitle = "title";
 
 // Gets every category with its details,
 // ordered alphabetically by category name.
 const getAllCategories = async() => {
     const query = `
         SELECT 
-            cat.${cId},
-            cat.${cName},
-            cat.${cDesc}
+            cat.${categoryId},
+            cat.${categoryName},
+            cat.${categoryDescription}
         FROM public.categories cat
-        ORDER BY cat.${cName} ASC; 
+        ORDER BY cat.${categoryName} ASC; 
     `;
 
     // Runs the query and stores all category rows from the database.
@@ -29,11 +29,11 @@ const getAllCategories = async() => {
 const getCategoryById = async(category_id) => {
     const query = `
     SELECT
-        cat.${cId},
-        cat.${cName},
-        cat.${cDesc}
+        cat.${categoryId},
+        cat.${categoryName},
+        cat.${categoryDescription}
     FROM public.categories cat
-    WHERE cat.${cId} = $1
+    WHERE cat.${categoryId} = $1
     `;
 
     const queryParams = [category_id];
@@ -49,16 +49,16 @@ const getCategoryById = async(category_id) => {
 const getCategoriesByProjectId = async(project_id) => {
     const query = `
         SELECT
-            cat.${cId},
-            cat.${cName},
-            cat.${cDesc}
+            cat.${categoryId},
+            cat.${categoryName},
+            cat.${categoryDescription}
           FROM public.projects proj
           JOIN public.project_categories pc
-          ON proj.${pId} = pc.${pId}
+          ON proj.${projectId} = pc.${projectId}
           JOIN public.categories cat
-          ON pc.${cId} = cat.${cId}
-          WHERE proj.${pId} = $1
-          ORDER BY cat.${cName} ASC;
+          ON pc.${categoryId} = cat.${categoryId}
+          WHERE proj.${projectId} = $1
+          ORDER BY cat.${categoryName} ASC;
         `;
 
     const queryParams = [project_id];
@@ -73,15 +73,15 @@ const getCategoriesByProjectId = async(project_id) => {
 const getProjectsByCategoryId = async(category_id) => {
     const query = `
         SELECT
-            proj.${pId},
-            proj.${pTitle}
+            proj.${projectId},
+            proj.${projectTitle}
         FROM public.categories cat
         JOIN public.project_categories pc
-        ON cat.${cId} = pc.${cId}
+        ON cat.${categoryId} = pc.${categoryId}
         JOIN public.projects proj
-        ON pc.${pId} = proj.${pId}
-        WHERE cat.${cId} = $1
-        ORDER BY proj.${pTitle} ASC;
+        ON pc.${projectId} = proj.${projectId}
+        WHERE cat.${categoryId} = $1
+        ORDER BY proj.${projectTitle} ASC;
     `;
 
     const queryParams = [category_id];
@@ -98,11 +98,11 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
         // First, remove existing category assignments for the project
         await client.query(
             `DELETE FROM project_categories
-            WHERE ${pId} = $1;`,[projectId]);
+            WHERE ${projectId} = $1;`,[projectId]);
         // Next, add the new category assignments
         for (const categoryId of categoryIds) {
             await client.query(
-                `INSERT INTO project_categories (${cId}, ${pId})
+                `INSERT INTO project_categories (${categoryId}, ${projectId})
                 VALUES ($1, $2);`,[categoryId, projectId]
             );
         }
@@ -117,9 +117,9 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
 
 const createCategory = async (name, description) => {
     const query = `
-    INSERT INTO categories (${cName}, ${cDesc})
+    INSERT INTO categories (${categoryName}, ${categoryDescription})
     VALUES ($1, $2)
-    RETURNING ${cId};
+    RETURNING ${categoryId};
     `;
     const queryParams = [name, description];
     const result = await db.query(query, queryParams);
@@ -127,17 +127,17 @@ const createCategory = async (name, description) => {
             throw new Error('Failed to create category');
         }
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new category with ID:', result.rows[0][cId]);
+        console.log('Created new category with ID:', result.rows[0][categoryId]);
     }
-    return result.rows[0][cId];
+    return result.rows[0][categoryId];
 };
 
 const updateCategory = async (categoryId, name, description) => {
     const query = `
         UPDATE categories
-        SET ${cName} = $1, ${cDesc} = $2
-        WHERE ${cId} = $3
-        RETURNING ${cId};
+        SET ${categoryName} = $1, ${categoryDescription} = $2
+        WHERE ${categoryId} = $3
+        RETURNING ${categoryId};
     `;
     const queryParams = [name, description, categoryId];
     const result = await db.query(query, queryParams);
@@ -148,7 +148,7 @@ const updateCategory = async (categoryId, name, description) => {
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
       console.log('Updated Category with ID:', categoryId);
     }
-    return result.rows[0][cId];
+    return result.rows[0][categoryId];
 };
 
 export {
