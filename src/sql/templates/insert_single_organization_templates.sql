@@ -2,7 +2,7 @@
 --- THESE INSERT STATEMENTS ARE PLACE HOLDERS ONLY ---
 
 -- Insert a single organization
-INSERT INTO organization (
+INSERT INTO organizations (
   org_name,
   org_description,
   contact_email,

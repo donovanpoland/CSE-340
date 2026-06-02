@@ -16,7 +16,7 @@ const getAllOrganizations = async() => {
             org.${orName}, 
             org.${email}, 
             org.${fileName}
-        FROM public.organization org
+        FROM public.organizations org
         ORDER BY org.${orName} ASC;
     `;
 
@@ -35,7 +35,7 @@ const getOrganizationDetails = async (organizationId) => {
         org.${orDesc},
         org.${email},
         org.${fileName}
-      FROM public.organization org
+      FROM public.organizations org
       WHERE org.${orId} = $1;
     `;
 
@@ -57,7 +57,7 @@ const getOrganizationDetails = async (organizationId) => {
  */
 const createOrganization = async (name, description, contactEmail, logoFilename) => {
     const query = `
-      INSERT INTO organization (${orName}, ${orDesc}, ${email}, ${fileName})
+      INSERT INTO organizations (${orName}, ${orDesc}, ${email}, ${fileName})
       VALUES ($1, $2, $3, $4)
       RETURNING ${orId};
     `;
@@ -78,7 +78,7 @@ const createOrganization = async (name, description, contactEmail, logoFilename)
 
 const updateOrganization = async (organizationId, name, description, contactEmail) => {
     const query = `
-      UPDATE organization
+      UPDATE organizations
       SET ${orName} = $1, ${orDesc} = $2, ${email} = $3
       WHERE ${orId} = $4
       RETURNING ${orId};

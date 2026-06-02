@@ -10,7 +10,7 @@ SELECT * FROM categories;
 
 SELECT * FROM project_categories;
 
-
+SELECT * FROM roles;
 
 ------ ALTER Tables ------
 -- Do not run these as part of setup

@@ -1,7 +1,7 @@
--- create a table named organization
+-- create a table named organizations
 -- this table stores organizations and info about them
 --1:N
-CREATE TABLE organization (
+CREATE TABLE organizations (
     organization_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     org_name VARCHAR(150) NOT NULL,
     org_description TEXT NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE projects (
         -- It requires organization_id here to match an existing
         -- organization_id in the organization table
         FOREIGN KEY (organization_id)
-        REFERENCES organization(organization_id)
+        REFERENCES organizations(organization_id)
         -- ON DELETE CASCADE means if an organization is deleted,
         -- all related projects will be deleted automatically
         ON DELETE CASCADE
@@ -83,8 +83,20 @@ CREATE TABLE project_categories(
         ON DELETE CASCADE
 );
 
+-- Create roles for access control
+CREATE TABLE roles (
+    role_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL,
+    role_description TEXT NOT NULL
+);
+
+-- Instert role data
+INSERT INTO roles (role_name, role_description) VALUES 
+    ('user', 'Standard user with basic access'),
+    ('admin', 'Administrator with full system access');
+
 --Mass insert into organization
-INSERT INTO organization (
+INSERT INTO organizations (
     -- no organization ID needed as it is auto generated
     org_name, 
     org_description,
@@ -114,7 +126,7 @@ SELECT
     proj.event_location,
     proj.project_datetime,
     proj.project_timezone
-FROM organization org
+FROM organizations org
 JOIN (
     VALUES
     -- BrightFuture Builders

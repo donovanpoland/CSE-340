@@ -29,7 +29,7 @@ const getUpcomingProjects = async (number_of_projects) =>{
             proj.${orId},
             org.${orName} AS organization_name
         FROM public.projects proj
-        JOIN public.organization org 
+        JOIN public.organizations org 
         ON proj.${orId} = org.${orId}
         WHERE proj.${pdt} >= CURRENT_DATE
         ORDER BY proj.${pdt} ASC
@@ -56,7 +56,7 @@ const getProjectDetails = async (id) => {
             proj.${orId},
             org.${orName} AS organization_name
         FROM public.projects proj
-        JOIN public.organization org 
+        JOIN public.organizations org 
         ON proj.${orId} = org.${orId}
         WHERE proj.${pId} = $1
     `;
