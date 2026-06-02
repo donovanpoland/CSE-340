@@ -90,7 +90,17 @@ CREATE TABLE roles (
     role_description TEXT NOT NULL
 );
 
--- Instert role data
+CREATE TABLE users (
+    user_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_name VARCHAR(100) UNIQUE NOT NULL,
+    user_email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role_id INTEGER NOT NULL REFERENCES roles(role_id),
+    organization_id INTEGER REFERENCES organizations(organization_id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert role data
 INSERT INTO roles (role_name, role_description) VALUES 
     ('user', 'Standard user with basic access'),
     ('admin', 'Administrator with full system access');

@@ -64,3 +64,16 @@ DELETE FROM organization
 -- add timezone column to projects with a defualt value - back fill
 ALTER TABLE projects
   ADD COLUMN project_timezone VARCHAR(64) NOT NULL DEFAULT 'America/Denver';
+
+-- Insert a test user
+INSERT INTO users (user_name, user_email, password_hash, role_id, organization_id) 
+VALUES ('testuser', 'test@example.com', 'placeholder_hash', 1, 1);
+
+-- Join users and roles to see complete information
+SELECT u.user_id, u.user_name, u.user_email, r.role_name, r.role_description, o.organization_id, o.org_name
+FROM users u
+JOIN roles r ON u.role_id = r.role_id
+LEFT JOIN organizations o ON U.organization_id = o.organization_id;
+
+-- Delete the test user
+DELETE FROM users WHERE user_email = 'test@example.com';
