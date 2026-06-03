@@ -68,11 +68,11 @@ ALTER TABLE projects
   ADD COLUMN project_timezone VARCHAR(64) NOT NULL DEFAULT 'America/Denver';
 
 -- Insert a test user
-INSERT INTO users (user_name, user_email, password_hash, role_id, organization_id) 
-VALUES ('testuser', 'test@example.com', 'placeholder_hash', 1, 1);
+INSERT INTO users (first_name, last_name, user_email, password_hash, role_id, organization_id) 
+VALUES ('test', 'user', 'test@example.com', 'placeholder_hash', 1, 1);
 
 -- Join users and roles to see complete information
-SELECT u.user_id, u.user_name, u.user_email, r.role_name, r.role_description, o.organization_id, o.org_name
+SELECT u.user_id, u.first_name, u.last_name, u.user_email, r.role_name, r.role_description, o.organization_id, o.org_name
 FROM users u
 JOIN roles r ON u.role_id = r.role_id
 LEFT JOIN organizations o ON U.organization_id = o.organization_id;

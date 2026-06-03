@@ -201,6 +201,6 @@ SELECT NOW() AS current_time;
 
 -- *** users.js queries *** --
 -- create user (createUser)
-INSERT INTO users (name, email, password_hash, role_id) 
-    VALUES ($1, $2, $3, (SELECT role_id FROM roles WHERE role_name = $4)) 
+INSERT INTO users (fname, lname, email, password_hash, role_id) 
+    VALUES ($1, $2, $3, $4(SELECT role_id FROM roles WHERE role_name = $5), $6) 
     RETURNING user_id;

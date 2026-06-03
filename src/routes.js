@@ -22,7 +22,7 @@ import { categoriesPage, categoryDetailsPage, assignCategoriesForm, newCategoryF
 } from "./controllers/categories.js";
 
 // Users
-import { userRegistrationForm, processUserRegistration } from "./controllers/users.js";
+import { userRegistrationForm, processUserRegistration, userValidation } from "./controllers/users.js";
 
 import { testErrorPage } from "./controllers/errors.js";
 const router = express.Router();
@@ -58,7 +58,7 @@ router.post('/edit-category/:id', categoryValidation, processEditCategory ); // 
 
 //users
 router.get('/register', userRegistrationForm);
-router.post('/register', processUserRegistration);
+router.post('/register', userValidation, processUserRegistration);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);
