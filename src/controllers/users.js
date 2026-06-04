@@ -53,8 +53,19 @@ const userValidation = [
         
             return true;
         })
-];
+];// end user validation
 
+const loginValidation = [
+    body('email')
+        .normalizeEmail()
+        .notEmpty()
+        .withMessage('Email is required')
+        .isEmail()
+        .withMessage('Please provide a valid email address'),
+    body('password')
+        .notEmpty()
+        .withMessage('Password is required')
+];
 
 
 const userRegistrationForm = async (req, res) => {
@@ -124,6 +135,15 @@ const loginForm = (req, res) => {
 };
 
 const processLogin = async (req, res) => {
+    // check for validation errors
+    const results = validationResult(req);
+        if (!results.isEmpty()) {
+            results.array().forEach((error) => {
+                req.flash('error', error.msg);
+          });
+        return res.redirect('/register');
+        }
+
     const { email, password } = req.body;
 
     try {
@@ -158,4 +178,34 @@ const processLogout = async (req, res) => {
     res.redirect('/login');
 };
 
-export { userRegistrationForm, processUserRegistration, userValidation, processLogin, processLogout, loginForm };
+const requireLogin = (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        req.flash('error', 'You must be logged in to access that page.');
+        return res.redirect('/login');
+    }
+    next();
+};
+
+const showDashboard = (req, res) => {
+    const user = req.session.user;
+
+    const meta = getMetaData(
+        `Dashboard`,
+        ["dashboard", "user interface"],
+        `Your user information is displayed here.`
+    );
+
+    res.render('users/dashboard', { 
+        title: meta.title,
+        keywords: meta.keywords,
+        desc: meta.desc,
+        user
+    });
+};
+
+// module.exports = {
+//     // ... other exports
+//     requireLogin
+// };
+
+export { userRegistrationForm, processUserRegistration, userValidation, processLogin, processLogout, loginForm, requireLogin, showDashboard, loginValidation };

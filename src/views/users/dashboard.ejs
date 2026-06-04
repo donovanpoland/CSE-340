@@ -1,0 +1,14 @@
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+
+    <h2>Dashboard</h2>
+    <p>Name: <%= user.first_name %> <%= user.last_name %></p>
+    <p>Username: <%= user.user_email %></p>
+    <p>Role: <%= user.role_name %></p>
+
+</main>
+
+<%- include('../partials/footer') %>

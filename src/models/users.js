@@ -64,7 +64,7 @@ const authenticateUser = async (email, password) => {
 
     if (!user) {
         return null;
-    }
+    }// User not found
     
     const passwordIsValid = await verifyPassword(password, user[passwordHash]);
 
@@ -74,10 +74,10 @@ const authenticateUser = async (email, password) => {
 
     // return explicate user data, do not include password hash
     return {
-          first_name: user[firstName],
-          last_name: user[lastName],
-          user_email: user[userEmail],
-          role_name: user[roleName]
+        first_name: user[firstName],
+        last_name: user[lastName],
+        user_email: user[userEmail],
+        role_name: user[roleName]
       };
 
 };
