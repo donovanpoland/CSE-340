@@ -1,0 +1,33 @@
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
+    <main class="grid">
+        <h1><%= title %></h1>
+
+        <form action="/login" method="POST" class="grid">
+            <fieldset class="grid card">
+
+                <label for="email">Email (Username)
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        autocomplete="email"
+                        required
+                    />
+                </label>
+
+                <label for="password">Password
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                    />
+                </label>
+                
+                <button class="btn" type="submit" id="submit">Login</button>
+            </fieldset>
+        </form>
+    </main>   
+
+<%- include('../partials/footer') %>

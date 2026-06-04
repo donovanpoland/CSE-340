@@ -49,7 +49,7 @@ main {
 
 form {
     width: min(100%, 38rem);
-    justify-self: left;
+    justify-self: center;
 }
 
 fieldset{

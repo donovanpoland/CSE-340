@@ -1,5 +1,5 @@
-import { query } from "express-validator";
 import db from "./db.js";
+import bcrypt from 'bcrypt';
 
 //if database columns change update here to update all queries
 
@@ -34,4 +34,52 @@ const createUser = async (fname, lname, email, hashedPassword, orgId) => {
     }
 };
 
-export {createUser};
+const findUserByEmail = async (email) => {
+    const query = `
+        SELECT u.${firstName}, u.${lastName}, u.${userEmail}, u.${passwordHash}, u.${roleId}, r.${roleName} 
+        FROM users u
+        JOIN roles r ON u.${roleId} = r.${roleId}
+        WHERE u.${userEmail} = $1
+    `;
+    const queryParams = [email];
+    
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        return null; // User not found
+    }
+    
+    return result.rows[0];
+};
+
+const verifyPassword = async (password, hashedpassword) => {
+    return bcrypt.compare(password, hashedpassword);
+};
+
+
+const authenticateUser = async (email, password) => {
+
+    const user = await findUserByEmail(email);
+
+
+    if (!user) {
+        return null;
+    }
+    
+    const passwordIsValid = await verifyPassword(password, user[passwordHash]);
+
+    if (!passwordIsValid) {
+        return null;
+    }
+
+    // return explicate user data, do not include password hash
+    return {
+          first_name: user[firstName],
+          last_name: user[lastName],
+          user_email: user[userEmail],
+          role_name: user[roleName]
+      };
+
+};
+
+export {createUser, authenticateUser};

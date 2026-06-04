@@ -1,4 +1,3 @@
-import { query } from 'express-validator';
 import db from './db.js';
 
 //if database columns change update here to update all queries

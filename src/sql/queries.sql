@@ -79,3 +79,8 @@ LEFT JOIN organizations o ON U.organization_id = o.organization_id;
 
 -- Delete the test user
 DELETE FROM users WHERE user_email = 'test@example.com';
+
+-- change name of user to basic_user
+UPDATE roles
+SET role_name = 'basic_user'
+WHERE role_id = 1;
