@@ -180,6 +180,9 @@ VALUES ($1, $2);
 
 COMMIT;
 
+-- on error:
+ROLLBACK;
+
 -- create category (createCategory)
 INSERT INTO categories (
     cat_name,
@@ -201,6 +204,37 @@ SELECT NOW() AS current_time;
 
 -- *** users.js queries *** --
 -- create user (createUser)
-INSERT INTO users (fname, lname, email, password_hash, role_id) 
-    VALUES ($1, $2, $3, $4(SELECT role_id FROM roles WHERE role_name = $5), $6) 
-    RETURNING user_id;
+INSERT INTO users (
+    first_name,
+    last_name,
+    user_email,
+    password_hash,
+    role_id,
+    organization_id
+)
+VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    (SELECT role_id FROM roles WHERE role_name = $5),
+    $6
+)
+RETURNING user_id;
+
+-- find user by email (findUserByEmail)
+SELECT
+    u.first_name,
+    u.last_name,
+    u.user_email,
+    u.password_hash,
+    u.role_id,
+    r.role_name
+FROM users u
+JOIN roles r
+ON u.role_id = r.role_id
+WHERE u.user_email = $1;
+
+-- authenticate user (authenticateUser)
+-- No separate SQL query.
+-- This function calls findUserByEmail, then verifies the password in Node with bcrypt.

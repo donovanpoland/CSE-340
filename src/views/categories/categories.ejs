@@ -9,6 +9,8 @@
                 </li>
             <% }); %>
         </ul>
-        <a class="btn" href="/new-category">New Category</a>
+        <% if (user && user.role_name === 'admin') { %>
+            <a class="btn" href="/new-category">New Category</a>
+        <% } %>
     </main>
 <%- include('../partials/footer') %>

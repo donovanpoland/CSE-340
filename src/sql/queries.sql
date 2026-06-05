@@ -80,7 +80,20 @@ LEFT JOIN organizations o ON U.organization_id = o.organization_id;
 -- Delete the test user
 DELETE FROM users WHERE user_email = 'test@example.com';
 
--- change name of user to basic_user
+-- change name of user to basic user
 UPDATE roles
-SET role_name = 'basic_user'
+SET role_name = 'basic user'
 WHERE role_id = 1;
+
+-- create/update admin account for testing (changed names too)
+UPDATE users
+SET role_id = (SELECT role_id FROM roles WHERE role_name = 'admin'),
+  first_name = 'AdminFirst',
+  last_name = 'LastAdmin'
+WHERE user_email = 'admin@example.com';
+
+-- Verify the update by listing all users and their roles
+SELECT users.user_id, users.user_email, roles.role_name 
+FROM users 
+JOIN roles ON users.role_id = roles.role_id;
+

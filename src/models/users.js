@@ -14,7 +14,7 @@ const organizationId = "organization_id";
 
 
 const createUser = async (fname, lname, email, hashedPassword, orgId) => {
-    const defaultRole = 'user';
+    const defaultRole = 'basic user';
     const roleStatement = `SELECT ${roleId} FROM roles WHERE ${roleName} = $5`;
     const query = `
         INSERT INTO users (${firstName}, ${lastName}, ${userEmail}, ${passwordHash}, ${roleId}, ${organizationId})

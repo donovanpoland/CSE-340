@@ -1,13 +1,16 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
 
-<main>
-    <h1><%= title %></h1>
+<main class="grid">
+    <h1><%= toTitleCase(title) %></h1>
 
-    <h2>Dashboard</h2>
-    <p>Name: <%= user.first_name %> <%= user.last_name %></p>
-    <p>Username: <%= user.user_email %></p>
-    <p>Role: <%= user.role_name %></p>
+    <section class="grid">
+        <h2>Account info</h2>
+        <p>Name: <%= capitalizeFirstLetter(user.first_name) %> <%= capitalizeFirstLetter(user.last_name) %></p>
+        <p>Username: <%= user.user_email %></p>
+        <p>Permissions: <%= user.role_name %></p>
+    </section>
+    
 
 </main>
 

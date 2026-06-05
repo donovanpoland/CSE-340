@@ -103,7 +103,7 @@ CREATE TABLE users (
 
 -- Insert role data
 INSERT INTO roles (role_name, role_description) VALUES 
-    ('user', 'Standard user with basic access'),
+    ('basic user', 'Standard user with basic access'),
     ('admin', 'Administrator with full system access');
 
 --Mass insert into organization

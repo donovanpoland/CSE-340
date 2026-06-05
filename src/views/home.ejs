@@ -1,6 +1,6 @@
 <%- include('partials/head', { title, keywords, desc }) %>
 <%- include('partials/header') %>
-    <main>
+    <main class="grid">
         <section>
             <h1><%= toTitleCase(title) %></h1>
             <h2>Welcome to the CSE 340 Service Network</h2>
@@ -8,7 +8,7 @@
             <img src="/images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
         </section>
         <% if (isLoggedIn) { %>
-            <p><a href="/dashboard">My Dashboard</a></p>
+            <p><a class="btn" href="/dashboard">My Dashboard</a></p>
         <% } %>
     </main>
 <%- include('partials/footer') %>

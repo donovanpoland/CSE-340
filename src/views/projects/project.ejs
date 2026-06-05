@@ -14,9 +14,11 @@
                 </li>
             <% }); %>
         </ul>
-        <div class="flex-row">
-            <a class="btn" href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
-            <a class="btn" href="/edit-project/<%= project.project_id %>">Edit Project</a>
-        </div>
+        <% if (user && user.role_name === 'admin') { %>
+            <div class="flex-row">
+                <a class="btn" href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
+                <a class="btn" href="/edit-project/<%= project.project_id %>">Edit Project</a>
+            </div>
+        <% } %>
     </main>
 <%- include('../partials/footer') %>

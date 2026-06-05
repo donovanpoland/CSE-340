@@ -1,22 +1,22 @@
 import db from './db.js';
 
 // If database columns change update here to update all queries
-const categoryId = "category_id";
-const categoryName = "cat_name";
-const categoryDescription = "cat_description";
-const projectId = "project_id"
-const projectTitle = "title";
+const CATEGORY_ID = "category_id";
+const CATEGORY_NAME = "cat_name";
+const CATEGORY_DESCRIPTION = "cat_description";
+const PROJECT_ID = "project_id";
+const PROJECT_TITLE = "title";
 
 // Gets every category with its details,
 // ordered alphabetically by category name.
 const getAllCategories = async() => {
     const query = `
         SELECT 
-            cat.${categoryId},
-            cat.${categoryName},
-            cat.${categoryDescription}
+            cat.${CATEGORY_ID},
+            cat.${CATEGORY_NAME},
+            cat.${CATEGORY_DESCRIPTION}
         FROM public.categories cat
-        ORDER BY cat.${categoryName} ASC; 
+        ORDER BY cat.${CATEGORY_NAME} ASC; 
     `;
 
     // Runs the query and stores all category rows from the database.
@@ -26,17 +26,17 @@ const getAllCategories = async() => {
 };
 
 // Gets the details for one category by category ID.
-const getCategoryById = async(category_id) => {
+const getCategoryById = async(id) => {
     const query = `
     SELECT
-        cat.${categoryId},
-        cat.${categoryName},
-        cat.${categoryDescription}
+        cat.${CATEGORY_ID},
+        cat.${CATEGORY_NAME},
+        cat.${CATEGORY_DESCRIPTION}
     FROM public.categories cat
-    WHERE cat.${categoryId} = $1
+    WHERE cat.${CATEGORY_ID} = $1
     `;
 
-    const queryParams = [category_id];
+    const queryParams = [id];
     // Runs the query and stores the matching category details row.
     const result = await db.query(query, queryParams);
 
@@ -46,22 +46,22 @@ const getCategoryById = async(category_id) => {
 
 // Gets all categories linked to a specific project,
 // ordered alphabetically by category name.
-const getCategoriesByProjectId = async(project_id) => {
+const getCategoriesByProjectId = async (projectId) => {
     const query = `
         SELECT
-            cat.${categoryId},
-            cat.${categoryName},
-            cat.${categoryDescription}
+            cat.${CATEGORY_ID},
+            cat.${CATEGORY_NAME},
+            cat.${CATEGORY_DESCRIPTION}
           FROM public.projects proj
           JOIN public.project_categories pc
-          ON proj.${projectId} = pc.${projectId}
+          ON proj.${PROJECT_ID} = pc.${PROJECT_ID}
           JOIN public.categories cat
-          ON pc.${categoryId} = cat.${categoryId}
-          WHERE proj.${projectId} = $1
-          ORDER BY cat.${categoryName} ASC;
+          ON pc.${CATEGORY_ID} = cat.${CATEGORY_ID}
+          WHERE proj.${PROJECT_ID} = $1
+          ORDER BY cat.${CATEGORY_NAME} ASC;
         `;
 
-    const queryParams = [project_id];
+    const queryParams = [projectId];
     // Runs the query and stores all category rows linked to the selected project.
     const result = await db.query(query, queryParams);
 
@@ -70,21 +70,21 @@ const getCategoriesByProjectId = async(project_id) => {
 
 // Gets all projects associated with a specific category,
 // ordered alphabetically by project title.
-const getProjectsByCategoryId = async(category_id) => {
+const getProjectsByCategoryId = async (categoryId) => {
     const query = `
         SELECT
-            proj.${projectId},
-            proj.${projectTitle}
+            proj.${PROJECT_ID},
+            proj.${PROJECT_TITLE}
         FROM public.categories cat
         JOIN public.project_categories pc
-        ON cat.${categoryId} = pc.${categoryId}
+        ON cat.${CATEGORY_ID} = pc.${CATEGORY_ID}
         JOIN public.projects proj
-        ON pc.${projectId} = proj.${projectId}
-        WHERE cat.${categoryId} = $1
-        ORDER BY proj.${projectTitle} ASC;
+        ON pc.${PROJECT_ID} = proj.${PROJECT_ID}
+        WHERE cat.${CATEGORY_ID} = $1
+        ORDER BY proj.${PROJECT_TITLE} ASC;
     `;
 
-    const queryParams = [category_id];
+    const queryParams = [categoryId];
     // Runs the query and stores all project rows linked to the selected category.
     const result = await db.query(query, queryParams);
      
@@ -98,12 +98,12 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
         // First, remove existing category assignments for the project
         await client.query(
             `DELETE FROM project_categories
-            WHERE ${projectId} = $1;`,[projectId]);
+            WHERE ${PROJECT_ID} = $1;`, [projectId]);
         // Next, add the new category assignments
         for (const categoryId of categoryIds) {
             await client.query(
-                `INSERT INTO project_categories (${categoryId}, ${projectId})
-                VALUES ($1, $2);`,[categoryId, projectId]
+                `INSERT INTO project_categories (${CATEGORY_ID}, ${PROJECT_ID})
+                VALUES ($1, $2);`, [categoryId, projectId]
             );
         }
         await client.query('COMMIT');
@@ -117,9 +117,9 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
 
 const createCategory = async (name, description) => {
     const query = `
-    INSERT INTO categories (${categoryName}, ${categoryDescription})
+    INSERT INTO categories (${CATEGORY_NAME}, ${CATEGORY_DESCRIPTION})
     VALUES ($1, $2)
-    RETURNING ${categoryId};
+    RETURNING ${CATEGORY_ID};
     `;
     const queryParams = [name, description];
     const result = await db.query(query, queryParams);
@@ -127,28 +127,28 @@ const createCategory = async (name, description) => {
             throw new Error('Failed to create category');
         }
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new category with ID:', result.rows[0][categoryId]);
+        console.log('Created new category with ID:', result.rows[0][CATEGORY_ID]);
     }
-    return result.rows[0][categoryId];
+    return result.rows[0][CATEGORY_ID];
 };
 
-const updateCategory = async (categoryId, name, description) => {
+const updateCategory = async (id, name, description) => {
     const query = `
         UPDATE categories
-        SET ${categoryName} = $1, ${categoryDescription} = $2
-        WHERE ${categoryId} = $3
-        RETURNING ${categoryId};
+        SET ${CATEGORY_NAME} = $1, ${CATEGORY_DESCRIPTION} = $2
+        WHERE ${CATEGORY_ID} = $3
+        RETURNING ${CATEGORY_ID};
     `;
-    const queryParams = [name, description, categoryId];
+    const queryParams = [name, description, id];
     const result = await db.query(query, queryParams);
     if (result.rows.length === 0) {
       throw new Error('Category not found');
     }
 
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-      console.log('Updated Category with ID:', categoryId);
+      console.log('Updated Category with ID:', id);
     }
-    return result.rows[0][categoryId];
+    return result.rows[0][CATEGORY_ID];
 };
 
 export {

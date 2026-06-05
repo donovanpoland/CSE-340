@@ -1,37 +1,37 @@
 import db from './db.js';
 
 //if database columns change update here to update all queries
-const projectId = "project_id"
-const projectTitle = "title";
-const projectDescription = "proj_description";
-const projectDateTime = "project_datetime";
-const projectTimezone = "project_timezone";
-const projectLocation = "event_location";
+const PROJECT_ID = "project_id";
+const PROJECT_TITLE = "title";
+const PROJECT_DESCRIPTION = "proj_description";
+const PROJECT_DATETIME = "project_datetime";
+const PROJECT_TIMEZONE = "project_timezone";
+const PROJECT_LOCATION = "event_location";
 
-const organizationId = "organization_id";
-const organizationName = "org_name";
+const ORGANIZATION_ID = "organization_id";
+const ORGANIZATION_NAME = "org_name";
 
-const categoryId = "category_id";
-const categoryName = "cat_name";
-const categoryDescription = "cat_description";
+const CATEGORY_ID = "category_id";
+const CATEGORY_NAME = "cat_name";
+const CATEGORY_DESCRIPTION = "cat_description";
 
 // Gets a limited list of upcoming projects
 // with their basic details and organization name.
 const getUpcomingProjects = async (number_of_projects) =>{
     const query = `
         SELECT
-            proj.${projectId},
-            proj.${projectTitle},
-            proj.${projectDateTime},
-            proj.${projectTimezone},
-            proj.${projectLocation},
-            proj.${organizationId},
-            org.${organizationName} AS organization_name
+            proj.${PROJECT_ID},
+            proj.${PROJECT_TITLE},
+            proj.${PROJECT_DATETIME},
+            proj.${PROJECT_TIMEZONE},
+            proj.${PROJECT_LOCATION},
+            proj.${ORGANIZATION_ID},
+            org.${ORGANIZATION_NAME} AS organization_name
         FROM public.projects proj
         JOIN public.organizations org 
-        ON proj.${organizationId} = org.${organizationId}
-        WHERE proj.${projectDateTime} >= CURRENT_DATE
-        ORDER BY proj.${projectDateTime} ASC
+        ON proj.${ORGANIZATION_ID} = org.${ORGANIZATION_ID}
+        WHERE proj.${PROJECT_DATETIME} >= CURRENT_DATE
+        ORDER BY proj.${PROJECT_DATETIME} ASC
         LIMIT $1;
     `;
 
@@ -46,18 +46,18 @@ const getUpcomingProjects = async (number_of_projects) =>{
 const getProjectDetails = async (id) => {
     const query = `
         SELECT
-            proj.${projectId},
-            proj.${projectTitle},
-            proj.${projectDescription},
-            proj.${projectDateTime},
-            proj.${projectTimezone},
-            proj.${projectLocation},
-            proj.${organizationId},
-            org.${organizationName} AS organization_name
+            proj.${PROJECT_ID},
+            proj.${PROJECT_TITLE},
+            proj.${PROJECT_DESCRIPTION},
+            proj.${PROJECT_DATETIME},
+            proj.${PROJECT_TIMEZONE},
+            proj.${PROJECT_LOCATION},
+            proj.${ORGANIZATION_ID},
+            org.${ORGANIZATION_NAME} AS organization_name
         FROM public.projects proj
         JOIN public.organizations org 
-        ON proj.${organizationId} = org.${organizationId}
-        WHERE proj.${projectId} = $1
+        ON proj.${ORGANIZATION_ID} = org.${ORGANIZATION_ID}
+        WHERE proj.${PROJECT_ID} = $1
     `;
 
     // Runs the query and stores the matching project details row.
@@ -71,16 +71,16 @@ const getProjectDetails = async (id) => {
 const getProjectsByOrganizationId = async (organizationId) => {
       const query = `
         SELECT
-          proj.${projectId},
-          proj.${organizationId},
-          proj.${projectTitle},
-          proj.${projectDescription},
-          proj.${projectLocation},
-          proj.${projectDateTime},
-          proj.${projectTimezone}
+          proj.${PROJECT_ID},
+          proj.${ORGANIZATION_ID},
+          proj.${PROJECT_TITLE},
+          proj.${PROJECT_DESCRIPTION},
+          proj.${PROJECT_LOCATION},
+          proj.${PROJECT_DATETIME},
+          proj.${PROJECT_TIMEZONE}
         FROM public.projects proj
-        WHERE proj.${organizationId} = $1
-        ORDER BY proj.${projectDateTime};
+        WHERE proj.${ORGANIZATION_ID} = $1
+        ORDER BY proj.${PROJECT_DATETIME};
       `;
       
       const queryParams = [organizationId];
@@ -101,12 +101,12 @@ const createProject = async (
     // cast to timestamp value for the database
     // Then ad the timezone with $5
     // example string would look like: '2026-06-10T09:00'::timestamp AT TIME ZONE 'America/Denver'
-    const timestamprojectTimezoneExpression = "$4::timestamp AT TIME ZONE $5"
+    const timestampWithTimezoneExpression = "$4::timestamp AT TIME ZONE $5";
 
     const query = `
-          INSERT INTO projects (${projectTitle}, ${projectDescription}, ${projectLocation}, ${projectDateTime}, ${projectTimezone}, ${organizationId})
-          VALUES ($1, $2, $3, ${timestamprojectTimezoneExpression}, $5, $6)
-          RETURNING ${projectId};
+          INSERT INTO projects (${PROJECT_TITLE}, ${PROJECT_DESCRIPTION}, ${PROJECT_LOCATION}, ${PROJECT_DATETIME}, ${PROJECT_TIMEZONE}, ${ORGANIZATION_ID})
+          VALUES ($1, $2, $3, ${timestampWithTimezoneExpression}, $5, $6)
+          RETURNING ${PROJECT_ID};
         `;
     
     const queryParams = [title, description, location, dateTime, timezone, organizationId];
@@ -117,24 +117,24 @@ const createProject = async (
     }
 
     if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new project with ID:', result.rows[0][projectId]);
+        console.log('Created new project with ID:', result.rows[0][PROJECT_ID]);
     }
 
-    return result.rows[0][projectId];
+    return result.rows[0][PROJECT_ID];
 };
 
 const updateProject = async (projectId, title, description, dateTime, timezone, location, organizationId) => {
-    const timestamprojectTimezoneExpression = "$3::timestamp AT TIME ZONE $4"
+    const timestampWithTimezoneExpression = "$3::timestamp AT TIME ZONE $4";
     const query = `
         UPDATE projects
-        SET ${projectTitle} = $1,
-            ${projectDescription} = $2, 
-            ${projectDateTime} = ${timestamprojectTimezoneExpression}, 
-            ${projectTimezone} = $4, 
-            ${projectLocation} = $5, 
-            ${organizationId} = $6
-        WHERE ${projectId} = $7
-        RETURNING ${projectId};
+        SET ${PROJECT_TITLE} = $1,
+            ${PROJECT_DESCRIPTION} = $2, 
+            ${PROJECT_DATETIME} = ${timestampWithTimezoneExpression}, 
+            ${PROJECT_TIMEZONE} = $4, 
+            ${PROJECT_LOCATION} = $5, 
+            ${ORGANIZATION_ID} = $6
+        WHERE ${PROJECT_ID} = $7
+        RETURNING ${PROJECT_ID};
     `;
 
     const queryParams = [title, description, dateTime, timezone, location, organizationId, projectId];
@@ -148,7 +148,7 @@ const updateProject = async (projectId, title, description, dateTime, timezone, 
         console.log('Updated project with ID:', projectId);
     }
     
-    return result.rows[0][projectId];
+    return result.rows[0][PROJECT_ID];
 };
 
 export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails, createProject, updateProject};
