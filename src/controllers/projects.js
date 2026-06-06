@@ -3,40 +3,11 @@ import { getAllOrganizations } from "../models/organizations.js";
 import { formatProjectDateTime, formatDateTimeLocalInput } from "../utils/datetime.js";
 import { getMetaData } from "../utils/meta.js";
 import { getCategoriesByProjectId } from "../models/categories.js";
-import { body, validationResult} from 'express-validator';
+
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 const SUPPORTED_TIMEZONES = Intl.supportedValuesOf("timeZone");
-const projectValidation = [
-    body('title')
-        .trim()
-        .notEmpty().withMessage('Title is required')
-        .isLength({ max: 150 }).withMessage('Title must be no more than 150 characters'),
-    body('description')
-        .trim()
-        .notEmpty().withMessage('Description is required')
-        .isLength({ max: 500 }).withMessage('Description must be less than 500 characters'),
-    body('location')
-        .trim()
-        .notEmpty().withMessage('Location is required')
-        .custom((value) => {
-              if (/^\d+$/.test(value.trim())) {
-                throw new Error("Location cannot be only numbers");
-              }
-        
-              return true;
-            })
-        .isLength({ min: 3, max: 255 }).withMessage('Location must be between 3 and 255 characters'),
-    body('dateTime')
-        .notEmpty().withMessage('Date is required')
-        .isISO8601().withMessage('Date must be a valid date format'),
-    body('timezone')
-        .notEmpty().withMessage('Timezone is required')
-        .isIn(SUPPORTED_TIMEZONES).withMessage('Timezone must be a valid supported timezone'), 
-    body('organizationId')
-        .notEmpty().withMessage('Organization is required')
-        .isInt().withMessage('Organization must be a valid integer')
-];
+
 
 const projectsPage = async (req, res) => {
     // get upcoming projects(limit)
@@ -103,16 +74,7 @@ const newProjectForm = async (req, res) => {
 };
   
 const processNewProject = async (req, res) => {
-    // check for validation errors
-    const results = validationResult(req);
-        if(!results.isEmpty()){
-            // Loop through validation errors and flash them
-            results.array().forEach((error) => {
-                req.flash('error', error.msg);
-            });
-    // Redirect back to the new project form
-    return res.redirect('/new-project');
-    }
+
     // Extract form data from req.body
     const { title, description, location, dateTime, timezone, organizationId } = req.body;
     // catch errors or update successfull
@@ -159,25 +121,15 @@ const editProjectForm = async(req, res) => {
 };
 
 const processEditedProject = async(req, res) => {
-    // Get id for current project
     const projectId = req.params.id;
-    // check for validation errors
-    const results = validationResult(req);
-        if(!results.isEmpty()){
-            // Loop through validation errors and flash them
-            results.array().forEach((error) => {
-                req.flash('error', error.msg);
-            });
-    // redirect back to the new organization form
-    return res.redirect(`/edit-project/${projectId}`);
-    }
     // Extract form data from req.body
     const {title, description, dateTime, timezone, location, organizationId} = req.body;
     // catch errors or update successfull
     try {
         // update the project in the database - id is returned when updateProject is used
         const updatedProjectId = await updateProject(
-            projectId, title, description, dateTime, timezone, location, organizationId);
+            projectId, title, description, dateTime, 
+            timezone, location, organizationId);
         // Send flash message to user
         req.flash('success', 'Project updated successfully!')
         // Redirect
@@ -194,5 +146,5 @@ const processEditedProject = async(req, res) => {
 // Export any controller functions
 export {
     projectsPage, projectDetailsPage, newProjectForm, editProjectForm,
-    projectValidation, processEditedProject, processNewProject
+    processEditedProject, processNewProject
 };

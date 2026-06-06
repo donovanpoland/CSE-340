@@ -9,24 +9,6 @@ import {
 } from "../models/categories.js";
 import { getMetaData } from "../utils/meta.js";
 import { getProjectDetails } from "../models/projects.js"
-import { body, validationResult} from 'express-validator';
-
-// Define validation and sanitization rules for category form
-// Define validation rules for category form
-const categoryValidation = [
-    body('name')
-        .trim()
-        .notEmpty()
-        .withMessage('category name is required')
-        .isLength({ max: 100 })
-        .withMessage('category name must be no more than 100 characters'),
-    body('description')
-        .trim()
-        .notEmpty()
-        .withMessage('category description is required')
-        .isLength({ max: 500 })
-        .withMessage('category description cannot exceed 500 characters'),
-];
 
 const categoriesPage = async (req, res) => {
     const categories = await getAllCategories();
@@ -115,16 +97,7 @@ const newCategoryForm = async (req, res) => {
 };
 
 const  processNewCategory = async (req, res) => {
-    // check for validation errors
-    const results = validationResult(req);
-        if(!results.isEmpty()){
-            // Loop through validation errors and flash them
-            results.array().forEach((error) => {
-                req.flash('error', error.msg);
-        });
-    // redirect back to the new category form
-    return res.redirect('/new-category');
-    }
+
     // Extract form data from req.body
     const {name, description} = req.body;
     try {
@@ -165,22 +138,13 @@ const editCategoryForm = async (req, res) => {
 const processEditCategory = async (req, res) => {
     // Get Id for current category
     const categoryId = req.params.id;
-    // check for validation errors
-    const results = validationResult(req);
-        if(!results.isEmpty()){
-            // Loop through validation errors and flash them
-            results.array().forEach((error) => {
-                req.flash('error', error.msg);
-            });
-    // redirect back to the new organization form
-    return res.redirect(`/edit-category/${categoryId}`);
-    }
+
     // Extract form data from req.body
     const {name, description} = req.body;
     // catch errors or update successfull
     try {
         // update the new category in the database - id is returned when createCategory is used
-        const categoryID = await updateCategory(categoryId, name, description);
+        await updateCategory(categoryId, name, description);
         // Send messgae to user
         req.flash('success', 'Category updated successfully!');
         // Redirect
@@ -198,5 +162,5 @@ const processEditCategory = async (req, res) => {
 // Export any controller functions
 export {
     categoriesPage, categoryDetailsPage, assignCategoriesForm, newCategoryForm, editCategoryForm,
-    processNewCategory, processAssignedCategories, processEditCategory, categoryValidation
+    processNewCategory, processAssignedCategories, processEditCategory
 };

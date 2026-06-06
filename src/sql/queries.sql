@@ -88,8 +88,8 @@ WHERE role_id = 1;
 -- create/update admin account for testing (changed names too)
 UPDATE users
 SET role_id = (SELECT role_id FROM roles WHERE role_name = 'admin'),
-  first_name = 'AdminFirst',
-  last_name = 'LastAdmin'
+  first_name = 'Admin',
+  last_name = 'CSE340'
 WHERE user_email = 'admin@example.com';
 
 -- Verify the update by listing all users and their roles

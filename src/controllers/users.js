@@ -1,71 +1,7 @@
 import bcrypt from 'bcrypt';
 import { createUser, authenticateUser } from '../models/users.js';
-import { getAllOrganizations, getOrganizationDetails } from "../models/organizations.js";
+import { getAllOrganizations } from "../models/organizations.js";
 import { getMetaData } from "../utils/meta.js";
-import { body, validationResult} from 'express-validator';
-
-const userValidation = [
-    body('fname')
-        .trim()
-        .notEmpty()
-        .withMessage('First Name required')
-        .isLength({max: 100})
-        .withMessage('First name must be no more than 100 characters'),
-    body('lname')
-        .trim()
-        .notEmpty()
-        .withMessage('Last Name required')
-        .isLength({max: 100})
-        .withMessage('Last name must be no more than 100 characters'),
-    body('email')
-        .normalizeEmail()
-        .notEmpty()
-        .withMessage('Email is required')
-        .isLength({ max: 255 })
-        .withMessage('Email cannot exceed 255 characters')
-        .isEmail()
-        .withMessage('Please provide a valid email address'),
-    body('password')
-        .notEmpty()
-        .withMessage('Password required')
-        .isLength({min: 7, max: 72})
-        .withMessage('Password must be between 8 and 72 characters long'),
-    body('confirmPassword')
-        .notEmpty()
-        .withMessage('Please confirm password')
-        .custom((value, { req }) => {
-            if (value !== req.body.password) {
-                throw new Error('Passwords do not match');
-            }
-
-            return true;
-        }),
-    body('organizationId')
-        .optional({ values: 'falsy' })
-        .isInt({ min: 1 })
-        .withMessage('Organization must be a valid selection')
-        .custom(async (organizationId) => {
-            const organization = await getOrganizationDetails(organizationId);
-        
-            if (!organization) {
-                throw new Error('Organization must be a valid selection');
-            }
-        
-            return true;
-        })
-];// end user validation
-
-const loginValidation = [
-    body('email')
-        .normalizeEmail()
-        .notEmpty()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Please provide a valid email address'),
-    body('password')
-        .notEmpty()
-        .withMessage('Password is required')
-];
 
 
 const userRegistrationForm = async (req, res) => {
@@ -86,14 +22,6 @@ const userRegistrationForm = async (req, res) => {
 };
 
 const processUserRegistration = async (req, res) => {
-    // check for validation errors
-    const results = validationResult(req);
-      if (!results.isEmpty()) {
-          results.array().forEach((error) => {
-              req.flash('error', error.msg);
-          });
-          return res.redirect('/register');
-      }
 
     const { fname, lname, email, password, organizationId } = req.body;
 
@@ -135,15 +63,6 @@ const loginForm = (req, res) => {
 };
 
 const processLogin = async (req, res) => {
-    // check for validation errors
-    const results = validationResult(req);
-        if (!results.isEmpty()) {
-            results.array().forEach((error) => {
-                req.flash('error', error.msg);
-          });
-        return res.redirect('/register');
-        }
-
     const { email, password } = req.body;
 
     try {
@@ -234,8 +153,6 @@ export {
     userRegistrationForm, loginForm, showDashboard,
     //proccessing
     processUserRegistration, processLogin, processLogout,
-    //validation
-    userValidation, loginValidation,
     //required
     requireLogin, requireRole 
 };
