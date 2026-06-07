@@ -1,0 +1,22 @@
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
+
+<main class="grid">
+    <h1><%= toTitleCase(title) %></h1>
+
+
+    <section class="grid">
+        <ul class="grid rmv_liststyle">
+            <% users.forEach(user => { %>
+                <li class="grid card ">
+                    <span><strong>Name</strong>: <%= toTitleCase(user.full_name) %></span>
+                    <span><strong>Username</strong>: <%= user.user_email %></span>
+                    <span><strong>Permissions</strong>: <%= toTitleCase(user.role_name) %></span>
+                    <span><strong>Organization</strong>: <%= toTitleCase(user.org_name) %></span>
+                </li>
+            <% }); %>
+        </ul>
+    </section>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers, getUserInfo, updateUserById, getUserSessionInfoById } from '../models/users.js';
 import { getAllOrganizations } from "../models/organizations.js";
 import { getMetaData } from "../utils/meta.js";
 
@@ -105,6 +105,18 @@ const requireLogin = (req, res, next) => {
     next();
 };
 
+const requireSelf = (req, res, next) => {
+    if (!req.session?.user) {
+        req.flash('error', 'You must be logged in.');
+        return res.redirect('/login');
+    }
+    if (req.session.user.user_id !== Number(req.params.id)) {
+        req.flash('error', 'You can only edit your own account.');
+        return res.redirect('/dashboard');
+    }
+    next();
+};
+
 const showDashboard = (req, res) => {
     const user = req.session.user;
 
@@ -119,6 +131,23 @@ const showDashboard = (req, res) => {
         keywords: meta.keywords,
         desc: meta.desc,
         user
+    });
+};
+
+const showAllUsers = async (req, res) => {
+    const users = await getAllUsers();
+
+    const meta = getMetaData(
+        `All users`,
+        ["all users", "user list"],
+        `List of all users for Admin use only.`
+    );
+
+    res.render('users/users', { 
+        title: meta.title,
+        keywords: meta.keywords,
+        desc: meta.desc,
+        users
     });
 };
 
@@ -148,11 +177,55 @@ const requireRole = (role) => {
     };
 };
 
+const showEditUserForm = async (req, res) => {
+    const userId = req.params.id;
+    const organizations = await getAllOrganizations();
+    const user = await getUserInfo(userId);
+    
+    const meta = getMetaData(
+        `Edit Your Information`,
+        ["edit user", "change user info"],
+        `Edit your user information is here.`
+    );
+    
+    res.render('users/edit-user', { 
+        title: meta.title,
+        keywords: meta.keywords,
+        desc: meta.desc,
+        user,
+        organizations
+    });
+
+};
+
+const processEditUser = async (req, res) => {
+    const userId = req.params.id;
+    // Extract form data from req.body
+    const {firstName, lastName, userEmail, organizationId} = req.body;
+    // catch errors or update successfull
+    try {
+        // update the user in the database - id is returned when updateUserById is used
+        await updateUserById(firstName, lastName, userEmail, organizationId, userId);
+        // update user info in session
+        req.session.user = await getUserSessionInfoById(userId);
+        // Send flash message to user
+        req.flash('success', `${firstName} ${lastName} your info has been updated successfully!`)
+        // Redirect
+        res.redirect(`/dashboard`);
+    } catch (error) {
+        console.error('Error updating user info:', error);
+        // Send flash message to user
+        req.flash('error', 'There was an error updating the your info.');
+        // Redirect
+        res.redirect(`/edit-user/${userId}`);
+    }
+};
+
 export {
     //pages
-    userRegistrationForm, loginForm, showDashboard,
+    userRegistrationForm, loginForm, showDashboard, showAllUsers, showEditUserForm,
     //proccessing
-    processUserRegistration, processLogin, processLogout,
+    processUserRegistration, processLogin, processLogout, processEditUser,
     //required
-    requireLogin, requireRole 
+    requireLogin, requireRole, requireSelf
 };

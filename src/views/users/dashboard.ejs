@@ -8,9 +8,15 @@
         <h2>Account info</h2>
         <p>Name: <%= capitalizeFirstLetter(user.first_name) %> <%= capitalizeFirstLetter(user.last_name) %></p>
         <p>Username: <%= user.user_email %></p>
-        <p>Permissions: <%= user.role_name %></p>
+        <p>Permissions: <%= capitalizeFirstLetter(user.role_name) %></p>
+        <% if (user.organization_name) { %>
+            <span>Organization: <%= toTitleCase(user.organization_name) %></span>
+        <% }; %>
+        <% if (user && user.role_name === 'admin') { %>
+            <a class="btn" href="/users">View all users</a>
+        <% } %>
     </section>
-    
+    <a class="btn" href="/edit-user/<%= user.user_id %>">Edit My Info</a>
 
 </main>
 

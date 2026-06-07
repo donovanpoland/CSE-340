@@ -147,9 +147,45 @@ const loginValidation = [
         .withMessage('Password is required')
 ];// end login validation
 
+const userEditValidation = [
+    body('firstName')
+        .trim()
+        .notEmpty()
+        .withMessage('First Name required')
+        .isLength({max: 100})
+        .withMessage('First name must be no more than 100 characters'),
+    body('lastName')
+        .trim()
+        .notEmpty()
+        .withMessage('Last Name required')
+        .isLength({max: 100})
+        .withMessage('Last name must be no more than 100 characters'),
+    body('userEmail')
+        .normalizeEmail()
+        .notEmpty()
+        .withMessage('Email is required')
+        .isLength({ max: 255 })
+        .withMessage('Email cannot exceed 255 characters')
+        .isEmail()
+        .withMessage('Please provide a valid email address'),
+    body('organizationId')
+        .optional({ values: 'falsy' })
+        .isInt({ min: 1 })
+        .withMessage('Organization must be a valid selection')
+        .custom(async (organizationId) => {
+            const organization = await getOrganizationDetails(organizationId);
+            if (!organization) {
+                throw new Error('Organization must be a valid selection');
+            }
+            return true;
+        })
+];// end user validation
+
+
+
 export {
     handleValidationErrors,
-    loginValidation, userValidation, 
+    loginValidation, userValidation, userEditValidation,
     projectValidation,
     organizationValidation,
     categoryValidation

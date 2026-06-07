@@ -5,7 +5,7 @@ import { Router } from "express";
 import { homePage } from "./controllers/index.js";
 
 // Validation
-import { userValidation, loginValidation, organizationValidation, categoryValidation, projectValidation, handleValidationErrors } from "./controllers/validation.js";
+import { userValidation, loginValidation, organizationValidation, categoryValidation, projectValidation, handleValidationErrors, userEditValidation } from "./controllers/validation.js";
 
 // Organizations
 import { 
@@ -26,9 +26,9 @@ import { categoriesPage, categoryDetailsPage, assignCategoriesForm, newCategoryF
 
 // Users
 import { 
-    userRegistrationForm, processUserRegistration, loginForm, showDashboard,
-    processLogin, processLogout,
-    requireLogin, requireRole
+    userRegistrationForm, processUserRegistration, loginForm, showDashboard, showAllUsers, showEditUserForm,
+    processLogin, processLogout, processEditUser,
+    requireLogin, requireRole, requireSelf
 } from "./controllers/users.js";
 
 import { testErrorPage } from "./controllers/errors.js";
@@ -116,6 +116,15 @@ router.post(
 );
 router.get('/logout', processLogout);
 router.get('/dashboard', requireLogin, showDashboard);
+router.get('/users', requireRole('admin'), showAllUsers);
+router.get('/edit-user/:id', requireLogin, requireSelf, showEditUserForm);
+router.post(
+    '/edit-user/:id', 
+    requireLogin,
+    requireSelf,
+    userEditValidation,
+    handleValidationErrors((req) => `/edit-user/${req.params.id}`),
+     processEditUser);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

@@ -35,7 +35,7 @@ const getUpcomingProjects = async (number_of_projects) =>{
         LIMIT $1;
     `;
 
-    // Runs the query and stores the upcoming project rows from the database.
+    // Runs the query and lists the upcoming project rows from the database.
     const result = await db.query(query, [number_of_projects]);
     
     return result.rows;

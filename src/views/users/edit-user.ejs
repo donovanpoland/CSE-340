@@ -1,0 +1,67 @@
+<%- include('../partials/head', { title, keywords, desc }) %>
+<%- include('../partials/header') %>
+    <main>
+        <h1><%= toTitleCase(title) %></h1>
+        <form action="/edit-user/<%= user.user_id %>" method="POST" class="grid">
+            <fieldset class="grid card">
+            
+                <label for="firstName">First Name
+                    <input 
+                        type="text" 
+                        name="firstName" 
+                        id="firstName"
+                        maxlength="100"
+                        autocomplete="given-name"
+                        required
+                        value="<%= user.first_name %>"
+                        >
+                </label>
+
+                <label for="lastName">Last Name
+                    <input 
+                        type="text" 
+                        name="lastName" 
+                        id="lastName"
+                        maxlength="100"
+                        autocomplete="family-name"
+                        required
+                        value="<%= user.last_name %>"
+                        >
+                </label>
+
+                <label for="userEmail">Email
+                    <input 
+                    type="email"
+                    id="userEmail"
+                    name="userEmail"
+                    autocomplete="email"
+                    maxlength="255"
+                    required
+                    value="<%= user.user_email %>"
+                    >
+                </label>
+
+                <label for="organizationId">Organization
+                    <select
+                        id="organizationId"
+                        name="organizationId"
+                    >
+                        <option value="">No organization</option>
+                        <% organizations.forEach(org => { %>
+                            <option
+                            value="<%= org.organization_id %>"
+                            <%= org.organization_id === user.organization_id ? "selected" : "" %>
+                            >
+                            <%= toTitleCase(org.org_name) %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </label>
+                
+                <button class="btn" type="submit" id="submit">Finish</button>
+            </fieldset>
+        </form>
+
+       
+    </main>
+<%- include('../partials/footer') %>
