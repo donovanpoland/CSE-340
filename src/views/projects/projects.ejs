@@ -1,26 +1,32 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
     <main class="grid">
-        <h1><%= toTitleCase(title)%></h1>
-        <ul class="grid">
-            <% projects.forEach(project => { %>
-                <li class="card grid">
-                    <a class="link" href="/project/<%= project.project_id%>">
-                        <strong><%= toTitleCase(project.title) %></strong>
-                        <br>
-                        <%= project.project_datetime %>
-                    </a>
-                    <span class="center">
-                        <a class="link" href="/organization/<%= project.organization_id %>">Organized By <%= toTitleCase(project.organization_name) %></a>
-                    </span>
-                    <span class="center">
-                        Located in <%= toTitleCase(project.event_location) %>
-                    </span>
-                </li>
-            <% }); %>
-        </ul>
-        <% if (user && user.role_name === 'admin') { %>
-            <a class="btn" href="/new-project">Add a New Service Project</a>
-        <% } %>
+        <div class="flex-row">
+            <h1><%= toTitleCase(title)%></h1>
+            <% if (user && user.role_name === 'admin') { %>
+                <!-- if the user is admin display new project route -->
+                <p class="center">- <strong>Admin</strong></p>
+                <a class="btn" href="/new-project">Add a New Service Project</a>
+            <% } %>
+        </div>
+        <section class="grid">
+            <ul class="grid rmv_liststyle projects">
+                <% projects.forEach(project => { %>
+                    <li class="card grid">
+                        <a class="link" href="/project/<%= project.project_id%>">
+                            <strong><%= toTitleCase(project.title) %></strong>
+                            <br>
+                            <%= project.project_datetime %>
+                        </a>
+                        <span class="center">
+                            <a class="link" href="/organization/<%= project.organization_id %>">Organized By <%= toTitleCase(project.organization_name) %></a>
+                        </span>
+                        <span class="center">
+                            Located in <%= toTitleCase(project.event_location) %>
+                        </span>
+                    </li>
+                <% }); %>
+            </ul>
+        </section>
     </main>
 <%- include('../partials/footer') %>

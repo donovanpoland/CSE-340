@@ -1,14 +1,15 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser, getAllUsers, getUserInfo, updateUserById, getUserSessionInfoById } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers, getUserInfo, updateUserById, getUserSessionInfoById, assignVolunteer, unassignVolunteer, getAllVolunteeredProjects } from '../models/users.js';
 import { getAllOrganizations } from "../models/organizations.js";
 import { getMetaData } from "../utils/meta.js";
+import { formatProjectDateTime } from '../utils/datetime.js';
 
 
 const userRegistrationForm = async (req, res) => {
 
     const organizations = await getAllOrganizations();
     const meta = getMetaData(
-        "Registation",
+        "Registration",
         ["Create New user", "New to Service Network", "Join"],
         `Enter user details to register for an account.`
     );
@@ -117,8 +118,14 @@ const requireSelf = (req, res, next) => {
     next();
 };
 
-const showDashboard = (req, res) => {
+const showDashboard =  async (req, res) => {
     const user = req.session.user;
+    const projects = (await getAllVolunteeredProjects(user.user_id))
+    .map((project) => ({
+            ...project, //all object data
+            //format data data
+            project_datetime: formatProjectDateTime(project.project_datetime, project.project_timezone)
+        }));
 
     const meta = getMetaData(
         `Dashboard`,
@@ -130,7 +137,8 @@ const showDashboard = (req, res) => {
         title: meta.title,
         keywords: meta.keywords,
         desc: meta.desc,
-        user
+        user,
+        projects,
     });
 };
 
@@ -221,11 +229,65 @@ const processEditUser = async (req, res) => {
     }
 };
 
+// add volunteer status
+const processVolunteer = async(req, res) => {
+    const projectId = req.params.id;
+    const userId = req.session.user.user_id;
+    try {
+        // update the user as volunteered for a project in the database
+        await assignVolunteer(userId, projectId);
+        // update user info in session
+        req.session.user = await getUserSessionInfoById(userId);
+        // Send flash message to user
+        req.flash('success', 'You have signed up for this project');
+        // Redirect
+        res.redirect(`/project/${projectId}`);
+    } catch (error) {
+        console.error('Error updating user info with volunteer status:', error);
+        // Send flash message to user
+        req.flash('error', 'There was an error when volunteering.');
+        // Redirect
+        res.redirect(`/project/${projectId}`);
+    }
+};
+
+// remove volunteer status
+const processUnvolunteer = async(req, res) => {
+    const projectId = req.params.id;
+    const userId = req.session.user.user_id;
+    const redirectTo = req.body.redirectTo;
+    try {
+        // update the user as volunteered for a project in the database
+        await unassignVolunteer(userId, projectId);
+        // update user info in session
+        req.session.user = await getUserSessionInfoById(userId);
+        // Send flash message to user
+        req.flash('success', 'You have removed this project');
+        // Redirect
+        if (redirectTo === 'dashboard') {
+            // early redirect if on dashboard
+            return res.redirect('/dashboard');
+        }
+        res.redirect(`/project/${projectId}`);
+    } catch (error) {
+        console.error('Error updating user info with volunteer status:', error);
+        // Send flash message to user
+        req.flash('error', 'There was an error when updating volunteer status.');
+        // Redirect
+        if (redirectTo === 'dashboard') {
+            // early redirect if on dashboard
+            return res.redirect('/dashboard');
+        }
+        // if not on dash board continue here
+        res.redirect(`/project/${projectId}`);
+    }
+};
+
 export {
     //pages
     userRegistrationForm, loginForm, showDashboard, showAllUsers, showEditUserForm,
-    //proccessing
-    processUserRegistration, processLogin, processLogout, processEditUser,
+    //processing
+    processUserRegistration, processLogin, processLogout, processEditUser, processVolunteer, processUnvolunteer,
     //required
     requireLogin, requireRole, requireSelf
 };

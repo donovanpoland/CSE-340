@@ -44,6 +44,10 @@ main {
     }
 }
 
+ul{
+    padding-left: var(--space-xs);
+}
+
 
 /* forms */
 
@@ -53,7 +57,9 @@ form {
 }
 
 fieldset{
-    @media only screen and (min-width: 38em) {
+    grid-template-columns: 1fr;
+
+    &.card{
         grid-template-columns: 1fr;
     }
 }

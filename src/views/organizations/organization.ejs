@@ -1,19 +1,25 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
 <main class="grid">
-    <h1><%= toTitleCase(title) %></h1>
-    <h2><%= toTitleCase(organization.org_name) %></h2>
-    <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
-    <p><strong>Description</strong>: <%= capitalizeFirstLetter(organization.org_description) %></p>
-    <p><strong>Email</strong>: <%= organization.contact_email %></p>
-    <h3>Service Projects</h3>
-    <ul class="grid rmv_liststyle">
-        <% projects.forEach(project => { %>
-        <li class="grid card"><a class="link" href="/project/<%= project.project_id %>"><%= toTitleCase(project.title) %></a></li>
-        <% }); %>
-    </ul>
-    <% if (user && user.role_name === 'admin') { %>
-        <a class="btn" href="/edit-organization/<%= organization.organization_id %>">Edit this organization</a>
-    <% } %>
+    <div class="flex-row">
+        <h1><%= toTitleCase(title) %></h1>
+        <% if (user && user.role_name === 'admin') { %>
+            <!-- if the user is admin display edit route -->
+            <p class="center">- <strong>Admin</strong></p>
+            <a class="btn" href="/edit-organization/<%= organization.organization_id %>">Edit this organization</a>
+        <% } %>
+    </div>
+    <section class="grid">
+        <h2><%= toTitleCase(organization.org_name) %></h2>
+        <p class="indent"><%= capitalizeFirstLetter(organization.org_description) %></p>
+        <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
+        <p>Reach out to us at <strong><%= organization.contact_email %></strong></p>
+        <h3>Service Projects</h3>
+        <ul class="grid">
+            <% projects.forEach(project => { %>
+            <li><a class="link" href="/project/<%= project.project_id %>"><%= toTitleCase(project.title) %></a></li>
+            <% }); %>
+        </ul>
+    </section>
 </main>
 <%- include('../partials/footer') %>

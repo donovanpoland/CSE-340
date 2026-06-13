@@ -1,18 +1,24 @@
-import { query } from "express-validator";
 import db from "./db.js";
 import bcrypt from 'bcrypt';
 
 //if database columns change update here to update all queries
-
+//users
 const USER_ID = "user_id";
 const FIRST_NAME = "first_name";
 const LAST_NAME = "last_name";
 const USER_EMAIL = "user_email";
 const PASSWORD_HASH = "password_hash";
+
+// roles
 const ROLE_ID = "role_id";
 const ROLE_NAME = "role_name"
+
+//organizations
 const ORGANIZATION_ID = "organization_id";
 const ORGANIZATION_NAME = "org_name";
+
+//projects
+const PROJECT_ID = "project_id";
 
 
 const createUser = async (fname, lname, email, hashedPassword, orgId) => {
@@ -50,12 +56,32 @@ const findUserByEmail = async (email) => {
 };
 
 const getAllUsers = async () => {
-    const fullNameStatment = `TRIM(CONCAT(u.${FIRST_NAME}, ' ', u.${LAST_NAME})) AS full_name`;
+    const fullNameStatement = `TRIM(CONCAT(u.${FIRST_NAME}, ' ', u.${LAST_NAME})) AS full_name`;
     const query = `
-        SELECT ${fullNameStatment}, u.${USER_EMAIL}, u.${ROLE_ID}, r.${ROLE_NAME}, u.${ORGANIZATION_ID}, o.${ORGANIZATION_NAME}
+        SELECT 
+            ${fullNameStatement}, 
+            u.${USER_EMAIL}, 
+            u.${ROLE_ID}, 
+            r.${ROLE_NAME}, 
+            u.${ORGANIZATION_ID}, 
+            o.${ORGANIZATION_NAME}, 
+            COUNT(pv.project_id) AS volunteered_project_count
         FROM users u
-        JOIN roles r ON u.${ROLE_ID} = r.${ROLE_ID}
-        LEFT JOIN organizations o ON u.${ORGANIZATION_ID} = o.${ORGANIZATION_ID}
+        JOIN roles r 
+            ON u.${ROLE_ID} = r.${ROLE_ID}
+        LEFT JOIN organizations o 
+            ON u.${ORGANIZATION_ID} = o.${ORGANIZATION_ID}
+        LEFT JOIN project_volunteers pv 
+            ON u.${USER_ID} = pv.${USER_ID}
+        GROUP BY
+              u.${USER_ID},
+              u.${FIRST_NAME},
+              u.${LAST_NAME},
+              u.${USER_EMAIL},
+              u.${ROLE_ID},
+              r.${ROLE_NAME},
+              u.${ORGANIZATION_ID},
+              o.${ORGANIZATION_NAME}
         ORDER BY full_name ASC;
     `;
     // Runs the query
@@ -84,6 +110,7 @@ const authenticateUser = async (email, password) => {
         last_name: user[LAST_NAME],
         user_email: user[USER_EMAIL],
         role_name: user[ROLE_NAME],
+        organization_id: user[ORGANIZATION_ID],
         org_name: user[ORGANIZATION_NAME]
       };
 };
@@ -131,35 +158,95 @@ const updateUserById = async(firstName, lastName, userEmail, organizationsId, us
 
 // used to refresh session info
 const getUserSessionInfoById = async (userId) => {
-      const query = `
-          SELECT
-              u.${USER_ID},
-              u.${FIRST_NAME},
-              u.${LAST_NAME},
-              u.${USER_EMAIL},
-              r.${ROLE_NAME},
-              o.${ORGANIZATION_NAME}
-          FROM users u
-          JOIN roles r ON u.${ROLE_ID} = r.${ROLE_ID}
-          LEFT JOIN organizations o ON u.${ORGANIZATION_ID} = o.${ORGANIZATION_ID}
-          WHERE u.${USER_ID} = $1;
-      `;
+    const query = `
+        SELECT
+            u.${USER_ID},
+            u.${FIRST_NAME},
+            u.${LAST_NAME},
+            u.${USER_EMAIL},
+            r.${ROLE_NAME},
+            u.${ORGANIZATION_ID},
+            o.${ORGANIZATION_NAME}
+        FROM users u
+        JOIN roles r ON u.${ROLE_ID} = r.${ROLE_ID}
+        LEFT JOIN organizations o ON u.${ORGANIZATION_ID} = o.${ORGANIZATION_ID}
+        WHERE u.${USER_ID} = $1;
+    `;
+    const queryParams = [userId];
+    const result = await db.query(query, queryParams);
+    if (result.rows.length === 0) {
+        return null;
+    }
+    return {
+        user_id: result.rows[0][USER_ID],
+        first_name: result.rows[0][FIRST_NAME],
+        last_name: result.rows[0][LAST_NAME],
+        user_email: result.rows[0][USER_EMAIL],
+        role_name: result.rows[0][ROLE_NAME],
+        organization_id: result.rows[0][ORGANIZATION_ID],
+        org_name: result.rows[0][ORGANIZATION_NAME]
+    };
+};
 
-      const queryParams = [userId];
-      const result = await db.query(query, queryParams);
+const assignVolunteer = async(userId, projectId) => {
+    // insert query
+    const query = `
+        INSERT INTO project_volunteers (${USER_ID}, ${PROJECT_ID})
+        VALUES ($1, $2)
+        ON CONFLICT (${PROJECT_ID}, ${USER_ID}) DO NOTHING
+        RETURNING ${USER_ID}, ${PROJECT_ID};
+    `;
+    // parameters for query
+    const queryParams = [userId, projectId];
+    // assign results from query
+    const result = await db.query(query, queryParams);
+    // return results
+    return result.rows[0] || null;
+};
 
-      if (result.rows.length === 0) {
-          return null;
-      }
+const unassignVolunteer = async(userId, projectId) => {
+    // insert query
+    const query = `
+        DELETE FROM project_volunteers
+        WHERE ${USER_ID} = $1 AND ${PROJECT_ID} = $2
+        RETURNING ${USER_ID}, ${PROJECT_ID};
+    `;
+    // parameters for query
+    const queryParams = [userId, projectId];
+    // assign results from query
+    const result = await db.query(query, queryParams);
+    // return results
+    return result.rows[0] || null;
+};
 
-      return {
-          user_id: result.rows[0][USER_ID],
-          first_name: result.rows[0][FIRST_NAME],
-          last_name: result.rows[0][LAST_NAME],
-          user_email: result.rows[0][USER_EMAIL],
-          role_name: result.rows[0][ROLE_NAME],
-          organization_name: result.rows[0][ORGANIZATION_NAME]
-      };
-  };
+const getAllVolunteeredProjects = async (userId) => {
+    const query = `
+        SELECT p.project_id, p.title, p.proj_description, p.event_location, p.project_datetime, p.project_timezone
+        FROM project_volunteers pv
+        JOIN projects p ON pv.${PROJECT_ID} = p.${PROJECT_ID}
+        WHERE pv.${USER_ID} = $1
+        ORDER BY p.project_datetime ASC; 
+    `;
 
-export {createUser, authenticateUser, getAllUsers, getUserInfo, updateUserById, getUserSessionInfoById};
+    /** assign results from query
+    * @param {string} - query 
+    * @param {integer} - user id 
+    **/ 
+    const result = await db.query(query, [userId]);
+    // return results
+    return result.rows;
+}
+
+const isVolunteered = async(userId, projectId) => {
+    //if users volunteer status return true or false per project
+    const query = `
+        SELECT 1
+        FROM project_volunteers
+        WHERE ${USER_ID} = $1 AND ${PROJECT_ID} = $2
+        LIMIT 1;
+    `;
+    const result = await db.query(query, [userId, projectId]);
+    return result.rows.length > 0;
+};
+
+export {createUser, authenticateUser, getAllUsers, getUserInfo, updateUserById, getUserSessionInfoById, assignVolunteer, getAllVolunteeredProjects, isVolunteered, unassignVolunteer};

@@ -1,23 +1,53 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
+    <main class="grid">
+        <div class="flex-row">
+            <h1><%= toTitleCase(title) %></h1>
+            <a class="btn" href="/edit-user/<%= user.user_id %>">Edit My Info</a>
+            <% if (user && user.role_name === 'admin') { %>
+                <!-- if the user is an admin view this button -->
+                <a class="btn" href="/users">View all users</a>
+            <% } %>
+        </div>
 
-<main class="grid">
-    <h1><%= toTitleCase(title) %></h1>
+        <section class="grid">
+            <h2>Account info</h2>
+            <ul class="grid rmv_liststyle">
+                <li><strong>Name</strong>: <%= capitalizeFirstLetter(user.first_name) %> <%= capitalizeFirstLetter(user.last_name) %></li>
+                <li><strong>Username</strong>: <%= user.user_email %></li>
+                <% if (user && user.role_name === 'admin') { %>
+                    <!-- view permission level if admin -->
+                    <li><strong>Permissions</strong>: <%= capitalizeFirstLetter(user.role_name) %></li>
+                <% } %>
+                <% if (user.org_name) { %>
+                    <!-- view organization name or none -->
+                    <li><strong>Organization</strong>: <a class="link" href="/organization/<%= user.organization_id %>"><%= toTitleCase(user.org_name) %></a></li>
+                <% } else { %>
+                    <li><strong>Organization</strong>: None</li>
+                <% } %>
+            </ul>
+        </section>
 
-    <section class="grid">
-        <h2>Account info</h2>
-        <p>Name: <%= capitalizeFirstLetter(user.first_name) %> <%= capitalizeFirstLetter(user.last_name) %></p>
-        <p>Username: <%= user.user_email %></p>
-        <p>Permissions: <%= capitalizeFirstLetter(user.role_name) %></p>
-        <% if (user.organization_name) { %>
-            <span>Organization: <%= toTitleCase(user.organization_name) %></span>
-        <% }; %>
-        <% if (user && user.role_name === 'admin') { %>
-            <a class="btn" href="/users">View all users</a>
-        <% } %>
-    </section>
-    <a class="btn" href="/edit-user/<%= user.user_id %>">Edit My Info</a>
-
-</main>
-
+        <section class="grid">
+            <% if (projects.length > 0) { %>
+                <h3>Currently Volunteering at</h3>
+                <p class="indent">You are signed up for <%= projects.length %> projects.</p>
+                <ul class="grid rmv_liststyle projects">
+                    <% projects.forEach(project => { %>
+                    <li class="grid card">
+                        <span><strong>What</strong>: <a class="link" href="/project/<%= project.project_id %>"><%= toTitleCase(project.title) %></a></span>
+                        <span><strong>When</strong>: <%= project.project_datetime %></span>
+                        <span><strong>Where</strong>: <%= toTitleCase(project.event_location) %></span>
+                        <form action="/project/<%= project.project_id %>/unvolunteer" method="POST" class="center">
+                            <input type="hidden" name="redirectTo" value="dashboard">
+                            <button class="btn" type="submit">Leave Project</button>
+                        </form>
+                    </li>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                <h3 class="center">You are not signed up to volunteer for any projects.</h3>
+            <% } %>
+        </section>
+    </main>
 <%- include('../partials/footer') %>

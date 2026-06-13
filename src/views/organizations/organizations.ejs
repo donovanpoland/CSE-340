@@ -1,22 +1,26 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
-<main class="grid">
-    <h1><%= toTitleCase(title) %></h1>
-    <p>Here are a few of our partner organizations:</p>
-    <ul class="grid rmv_liststyle">
-        <% organizations.forEach(organization => { %>
-        <li class="grid card">
-                <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
-                <!-- <div>ID: <%= organization.organization_id %></div> -->
-                <a class="link center" href="/organization/<%= organization.organization_id %>"><%= toTitleCase(organization.org_name) %></a>
-            <div class="center">
-                <%= organization.contact_email %>
-            </div>
-        </li>
-        <% }); %>
-    </ul>
-    <% if (user && user.role_name === 'admin') { %>
-        <a class="btn" href="/new-organization">Add a new organization</a>
-    <% } %>
-</main>
+    <main class="grid">
+        <div class="flex-row">
+            <h1><%= toTitleCase(title) %></h1>
+            <% if (user && user.role_name === 'admin') { %>
+                <!-- if the user is admin display new organization route -->
+                <p class="center">- <strong>Admin</strong></p>
+                <a class="btn" href="/new-organization">Add a new organization</a>
+            <% } %>
+        </div>
+        
+        <section class="grid">
+            <p>Here are a few of our partners:</p>
+            <ul class="grid rmv_liststyle organizations">
+                <% organizations.forEach(organization => { %>
+                <li class="grid card">
+                    <a class="link center" href="/organization/<%= organization.organization_id %>"><%= toTitleCase(organization.org_name) %></a>
+                    <img src="/images/<%= organization.logo_filename %>" alt="<%= toTitleCase(organization.org_name) %> logo">
+                    <span class="center"><%= organization.contact_email %></span>
+                </li>
+                <% }); %>
+            </ul>
+        </section>
+    </main>
 <%- include('../partials/footer') %>

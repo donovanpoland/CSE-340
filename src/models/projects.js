@@ -1,6 +1,8 @@
+import { query } from 'express-validator';
 import db from './db.js';
 
 //if database columns change update here to update all queries
+//projects
 const PROJECT_ID = "project_id";
 const PROJECT_TITLE = "title";
 const PROJECT_DESCRIPTION = "proj_description";
@@ -8,12 +10,20 @@ const PROJECT_DATETIME = "project_datetime";
 const PROJECT_TIMEZONE = "project_timezone";
 const PROJECT_LOCATION = "event_location";
 
+//organizations
 const ORGANIZATION_ID = "organization_id";
 const ORGANIZATION_NAME = "org_name";
 
+//categories
 const CATEGORY_ID = "category_id";
 const CATEGORY_NAME = "cat_name";
 const CATEGORY_DESCRIPTION = "cat_description";
+
+//users
+const USER_ID = "user_id";
+const FIRST_NAME = "first_name";
+const LAST_NAME = "last_name";
+const USER_EMAIL = "user_email";
 
 // Gets a limited list of upcoming projects
 // with their basic details and organization name.
@@ -53,16 +63,27 @@ const getProjectDetails = async (id) => {
             proj.${PROJECT_TIMEZONE},
             proj.${PROJECT_LOCATION},
             proj.${ORGANIZATION_ID},
-            org.${ORGANIZATION_NAME} AS organization_name
+            org.${ORGANIZATION_NAME} AS organization_name,
+            COUNT(pv.${USER_ID}) AS volunteer_count
         FROM public.projects proj
-        JOIN public.organizations org 
-        ON proj.${ORGANIZATION_ID} = org.${ORGANIZATION_ID}
+        JOIN public.organizations org
+            ON proj.${ORGANIZATION_ID} = org.${ORGANIZATION_ID}
+        LEFT JOIN public.project_volunteers pv
+            ON proj.${PROJECT_ID} = pv.${PROJECT_ID}
         WHERE proj.${PROJECT_ID} = $1
+        GROUP BY
+            proj.${PROJECT_ID},
+            proj.${PROJECT_TITLE},
+            proj.${PROJECT_DESCRIPTION},
+            proj.${PROJECT_DATETIME},
+            proj.${PROJECT_TIMEZONE},
+            proj.${PROJECT_LOCATION},
+            proj.${ORGANIZATION_ID},
+            org.${ORGANIZATION_NAME}
     `;
 
     // Runs the query and stores the matching project details row.
     const result = await db.query(query, [id]);
-
     return result.rows[0];
 };
 
@@ -151,4 +172,16 @@ const updateProject = async (projectId, title, description, dateTime, timezone, 
     return result.rows[0][PROJECT_ID];
 };
 
-export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails, createProject, updateProject};
+const getVolunteersByProjectId = async (projectId) => {
+    const query = `
+      SELECT u.${USER_ID}, u.${FIRST_NAME}, u.${LAST_NAME}, u.${USER_EMAIL}
+      FROM project_volunteers pv
+      JOIN users u ON pv.${USER_ID} = u.${USER_ID}
+      WHERE pv.${PROJECT_ID} = $1
+      ORDER BY u.${LAST_NAME} ASC, u.${FIRST_NAME} ASC;
+    `;
+    const result = await db.query(query, [projectId]);
+    return result.rows;
+  };
+
+export {getUpcomingProjects, getProjectsByOrganizationId, getProjectDetails, createProject, updateProject, getVolunteersByProjectId};

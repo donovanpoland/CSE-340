@@ -27,7 +27,7 @@ import { categoriesPage, categoryDetailsPage, assignCategoriesForm, newCategoryF
 // Users
 import { 
     userRegistrationForm, processUserRegistration, loginForm, showDashboard, showAllUsers, showEditUserForm,
-    processLogin, processLogout, processEditUser,
+    processLogin, processLogout, processEditUser, processVolunteer, processUnvolunteer,
     requireLogin, requireRole, requireSelf
 } from "./controllers/users.js";
 
@@ -75,7 +75,9 @@ router.post(
     projectValidation, //validation
     handleValidationErrors((req) => `/edit-project/${req.params.id}`), // handle validation errors
     processEditedProject // process new project submital
-); 
+);
+router.post('/project/:id/volunteer', requireLogin, processVolunteer);
+router.post('/project/:id/unvolunteer', requireLogin, processUnvolunteer);
 
 // categories
 router.get('/categories', categoriesPage); // open categories list page
@@ -124,7 +126,8 @@ router.post(
     requireSelf,
     userEditValidation,
     handleValidationErrors((req) => `/edit-user/${req.params.id}`),
-     processEditUser);
+    processEditUser);
+
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

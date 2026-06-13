@@ -30,7 +30,7 @@ const categoryDetailsPage = async (req, res) => {
     const category = await getCategoryById(categoryId);
     const projects = await getProjectsByCategoryId(categoryId);
     const meta = getMetaData(
-        `${category.cat_name}`,
+        'Category Details',
         [category.cat_name, "service project categories", "service projects"],
         `View details for the ${category.cat_name} category and its related service projects.`
     );

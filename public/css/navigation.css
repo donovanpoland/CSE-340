@@ -23,14 +23,14 @@
 
 .link {
     font-size: 1em;
-    padding: var(--space-2xs);
+    /* padding: var(--space-2xs); */
     text-decoration: none;
-    color: var(--color-text);
+    color: var(--color-accent);
     text-align: center;
     align-self: center;
 
     &:hover{
-        color: var(--color-accent);
+        color: var(--color-accent-hover);
         text-decoration: underline;
     }
 }
@@ -42,6 +42,8 @@ header {
 
     & #logo {
         padding: 0;
+
+        
 
         &:hover {
             text-decoration: none;
@@ -159,6 +161,10 @@ header {
             font-size: 3REM;
         }
     }   
+}
+
+header > div.flex-row{
+    justify-self: flex-start;
 }
 
 

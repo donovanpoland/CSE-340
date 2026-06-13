@@ -1,16 +1,21 @@
 <%- include('../partials/head', { title, keywords, desc }) %>
 <%- include('../partials/header') %>
     <main class="grid">
-        <h1><%= toTitleCase(title) %></h1>
-        <ul class="grid rmv_liststyle">
-            <% categories.forEach(category => { %>
-                <li class="card">
-                    <strong><a class="link" href="/category/<%= category.category_id %>"><%= toTitleCase(category.cat_name) %></a></strong>
-                </li>
-            <% }); %>
-        </ul>
-        <% if (user && user.role_name === 'admin') { %>
-            <a class="btn" href="/new-category">New Category</a>
-        <% } %>
+        <div class="flex-row">
+            <h1><%= toTitleCase(title) %></h1>
+            <% if (user && user.role_name === 'admin') { %>
+                <p class="center">- <strong>Admin</strong></p>
+                <a class="btn" href="/new-category">New Category</a>
+            <% } %>
+        </div>
+        <section class="grid">
+            <ul class="flex-column">
+                <% categories.forEach(category => { %>
+                    <li>
+                        <strong><a class="link" href="/category/<%= category.category_id %>"><%= toTitleCase(category.cat_name) %></a></strong>
+                    </li>
+                <% }); %>
+            </ul>
+        </section>
     </main>
 <%- include('../partials/footer') %>

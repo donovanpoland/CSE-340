@@ -6,13 +6,19 @@
 
 
     <section class="grid">
-        <ul class="grid rmv_liststyle">
+        <h2>Listed users</h2>
+        <ul class="grid rmv_liststyle users">
             <% users.forEach(user => { %>
-                <li class="grid card ">
+                <li class="grid card">
                     <span><strong>Name</strong>: <%= toTitleCase(user.full_name) %></span>
                     <span><strong>Username</strong>: <%= user.user_email %></span>
                     <span><strong>Permissions</strong>: <%= toTitleCase(user.role_name) %></span>
-                    <span><strong>Organization</strong>: <%= toTitleCase(user.org_name) %></span>
+                    <% if (user.org_name) { %>
+                        <p><strong>Organization</strong>: <a class="link" href="/organization/<%= user.organization_id %>"><%= toTitleCase(user.org_name) %></a></p>
+                    <% } else { %>
+                        <p><strong>Organization</strong>: None</p>
+                    <% } %>
+                    <span><strong>Volunteering</strong>: <%= user.volunteered_project_count %></span>
                 </li>
             <% }); %>
         </ul>

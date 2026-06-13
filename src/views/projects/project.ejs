@@ -1,24 +1,59 @@
 <%- include('../partials/head', { title, keywords, desc}) %>
 <%- include('../partials/header') %>
     <main class="grid">
+        <div class="flex-row">
         <h1><%= toTitleCase(title) %></h1>
-        <ul class="grid rmv_liststyle">
-            <li><strong>Description</strong>: <%= capitalizeFirstLetter(project.proj_description) %></li>
-            <li><strong>When</strong>: <%= project.project_datetime %></li>
-            <li><strong>Location</strong>: <%= toTitleCase(project.event_location) %></li>
-            <li><strong>Organized By: </strong><a class="link" href="/organization/<%= project.organization_id %>"><%= toTitleCase(project.organization_name) %></a></li>
-            <li><strong>Categories</strong>:</li>
-            <% categories.forEach(category => { %>
-                <li class="card">
-                    <a class="link" href="/category/<%= category.category_id %>"><%= toTitleCase(category.cat_name) %></a>
-                </li>
-            <% }); %>
-        </ul>
         <% if (user && user.role_name === 'admin') { %>
-            <div class="flex-row">
-                <a class="btn" href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
-                <a class="btn" href="/edit-project/<%= project.project_id %>">Edit Project</a>
-            </div>
+            <!-- if the user is admin display edit and asign routes -->
+            <p class="center">- <strong>Admin</strong></p>
+            <a class="btn" href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
+            <a class="btn" href="/edit-project/<%= project.project_id %>">Edit Project</a>
         <% } %>
+        </div>
+        <section class="grid card">
+            <div class="grid">
+                <h2>Project Info</h2>
+                <ul class="grid rmv_liststyle">
+                    <li><strong>Description</strong>: <%= capitalizeFirstLetter(project.proj_description) %></li>
+                    <li><strong>When</strong>: <%= project.project_datetime %></li>
+                    <li><strong>Location</strong>: <%= toTitleCase(project.event_location) %></li>
+                    <li><strong>Organized By</strong>: <a class="link" href="/organization/<%= project.organization_id %>"><%= toTitleCase(project.organization_name) %></a></li>
+                    <li><strong>Volunteers</strong>: <%= project.volunteer_count %></li>
+                </ul>
+            </div>
+            <div class="flex-column">
+                <h3>Categories</h3>
+                <ul class="flex-column">
+                    <% categories.forEach(category => { %>
+                        <li><a class="link" href="/category/<%= category.category_id %>"><%= toTitleCase(category.cat_name) %></a></li>
+                    <% }); %>
+                </ul>
+            </div>
+            <% if (user && user.role_name === 'admin') { %>
+                <div>
+                    <h3>Volunteers</h3>
+                    <ul class="grid">
+                        <% volunteers.forEach(volunteer => { %>
+                            <li><%= volunteer.first_name %> <%= volunteer.last_name %> - <%= volunteer.user_email %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% } %>
+        </section>
+        
+        <section class="flex-row">
+            <!-- if the user is logged in, display volunteer route/status -->
+            <% if (isLoggedIn && isVolunteered) { %>
+                <form action="/project/<%= project.project_id %>/unvolunteer" method="POST" class="grid">
+                    <p>You are currently signed up for this project!</p>
+                    <button class="btn" type="submit">Leave Project</button>
+                </form>
+            <% } else if (isLoggedIn && !isVolunteered){ %>
+                <form action="/project/<%= project.project_id %>/volunteer" method="POST" class="grid">
+                    <p>Would you like to volunteer?</p>
+                    <button class="btn" type="submit">Volunteer</button>
+                </form>
+            <% } %>
+        </section>
     </main>
 <%- include('../partials/footer') %>

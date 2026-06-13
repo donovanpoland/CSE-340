@@ -72,7 +72,10 @@
 
 .flex-row {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    @media only screen and (min-width: 38em) {
+        flex-direction: row;
+    }
     gap: var(--space-2xs);
 }
 
@@ -93,26 +96,39 @@
 
 .card{
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    justify-content: center;
     color: var(--color-text);
     border: 1px solid black;
     box-shadow: var(--shadow-sm);
     border-radius: var(--radius-sm);
-    gap: var(--space-sm);
+    gap: var(--space-2xs);
     padding: var(--space-2xs);
+}
+
+.left{
+    justify-content: start;
+}
+
+.right{
+    justify-content: end;
+}
+
+.indent{
+    text-indent: var(--space-xs);
+}
+
+.organizations, .projects, .users{
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 18rem));
+    justify-content: center;
 
     & img{
         justify-self: center;
-
-        @media only screen and (min-width: 38em) {
-            justify-self: left;
-        }
     }
 
-    @media only screen and (min-width: 38em) {
-        margin-right: var(--space-xs);
+    & li:hover{
+        box-shadow: var(--shadow-xsm);
     }
 }
+
 
 /* Flash message styles */
 .alert {

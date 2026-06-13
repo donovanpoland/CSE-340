@@ -1,11 +1,12 @@
-import { getUpcomingProjects, getProjectDetails, createProject, updateProject,  } from "../models/projects.js";
+import { getUpcomingProjects, getProjectDetails, createProject, updateProject, getVolunteersByProjectId } from "../models/projects.js";
 import { getAllOrganizations } from "../models/organizations.js";
 import { formatProjectDateTime, formatDateTimeLocalInput } from "../utils/datetime.js";
 import { getMetaData } from "../utils/meta.js";
 import { getCategoriesByProjectId } from "../models/categories.js";
+import { isVolunteered } from "../models/users.js";
 
 
-const NUMBER_OF_UPCOMING_PROJECTS = 5;
+const NUMBER_OF_UPCOMING_PROJECTS = 8;
 const SUPPORTED_TIMEZONES = Intl.supportedValuesOf("timeZone");
 
 
@@ -15,13 +16,14 @@ const projectsPage = async (req, res) => {
     const projects = (await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS))
     .map((project) => ({
         ...project, //all object data
+        //format data data
         project_datetime: formatProjectDateTime(project.project_datetime, project.project_timezone)
     }));
     
     const meta = getMetaData(
         "Upcoming Service Projects",
         ["Upcoming Service Projects", "volunteering", "community events"],
-        "View the next five upcoming service projects and their event details."
+        "View the next upcoming service projects and their event details."
     );
 
     res.render("projects/projects", {
@@ -33,9 +35,17 @@ const projectsPage = async (req, res) => {
 };
 
 const projectDetailsPage = async (req, res) => {
-    const { id } = req.params;
-    const projectData = await getProjectDetails(id);
+    const userId = req.session.user?.user_id ?? null;
+    const projectId = req.params.id;
+
+    const isAdmin = req.session.user?.role_name === 'admin';
+    const volunteers = isAdmin ? await getVolunteersByProjectId(projectId) : [];
+
+    const projectData = await getProjectDetails(projectId);
     const categories = await getCategoriesByProjectId(projectData.project_id);
+
+    const volunteerStatus = userId ? await isVolunteered(userId, projectId) : false;
+
     const project = {
         ...projectData, //all object data
         project_datetime: formatProjectDateTime(projectData.project_datetime, projectData.project_timezone)
@@ -52,7 +62,9 @@ const projectDetailsPage = async (req, res) => {
         keywords: meta.keywords,
         desc: meta.desc,
         project,
-        categories
+        categories,
+        isVolunteered: volunteerStatus,
+        volunteers
       });
 };
 

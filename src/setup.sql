@@ -101,6 +101,22 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- create junction table to keep track of volunteers for projects
+CREATE TABLE project_volunteers (
+    project_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    volunteered_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (project_id, user_id),
+    CONSTRAINT fk_project_volunteers_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects(project_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_project_volunteers_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
+
 -- Insert role data
 INSERT INTO roles (role_name, role_description) VALUES 
     ('basic user', 'Standard user with basic access'),
