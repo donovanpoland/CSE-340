@@ -37,11 +37,23 @@ SELECT
     proj.project_timezone,
     proj.event_location,
     proj.organization_id,
-    org.org_name AS organization_name
+    org.org_name AS organization_name,
+    COUNT(pv.user_id) AS volunteer_count
 FROM public.projects proj
 JOIN public.organizations org
 ON proj.organization_id = org.organization_id
+LEFT JOIN public.project_volunteers pv
+ON proj.project_id = pv.project_id
 WHERE proj.project_id = $1
+GROUP BY
+    proj.project_id,
+    proj.title,
+    proj.proj_description,
+    proj.project_datetime,
+    proj.project_timezone,
+    proj.event_location,
+    proj.organization_id,
+    org.org_name;
 
 -- get projects by id (getProjectsByOrganizationId)
 SELECT
@@ -85,6 +97,18 @@ SET title = $1,
     organization_id = $6
 WHERE project_id = $7
 RETURNING project_id;
+
+-- get volunteers by project id (getVolunteersByProjectId)
+SELECT
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.user_email
+FROM project_volunteers pv
+JOIN users u
+ON pv.user_id = u.user_id
+WHERE pv.project_id = $1
+ORDER BY u.last_name ASC, u.first_name ASC;
 
 -- *** organizations.js queries *** --
 -- get all organization data (getAllOrganizations)
@@ -224,17 +248,123 @@ RETURNING user_id;
 
 -- find user by email (findUserByEmail)
 SELECT
+    u.user_id,
     u.first_name,
     u.last_name,
     u.user_email,
     u.password_hash,
     u.role_id,
-    r.role_name
+    r.role_name,
+    u.organization_id,
+    o.org_name
 FROM users u
 JOIN roles r
 ON u.role_id = r.role_id
+LEFT JOIN organizations o
+ON u.organization_id = o.organization_id
 WHERE u.user_email = $1;
 
 -- authenticate user (authenticateUser)
 -- No separate SQL query.
 -- This function calls findUserByEmail, then verifies the password in Node with bcrypt.
+
+-- get all users (getAllUsers)
+SELECT
+    TRIM(CONCAT(u.first_name, ' ', u.last_name)) AS full_name,
+    u.user_email,
+    u.role_id,
+    r.role_name,
+    u.organization_id,
+    o.org_name,
+    COUNT(pv.project_id) AS volunteer_count
+FROM users u
+JOIN roles r
+ON u.role_id = r.role_id
+LEFT JOIN organizations o
+ON u.organization_id = o.organization_id
+LEFT JOIN project_volunteers pv
+ON u.user_id = pv.user_id
+GROUP BY
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.user_email,
+    u.role_id,
+    r.role_name,
+    u.organization_id,
+    o.org_name
+ORDER BY full_name ASC;
+
+-- get user info (getUserInfo)
+SELECT
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.user_email,
+    u.organization_id,
+    o.org_name
+FROM users u
+LEFT JOIN organizations o
+ON u.organization_id = o.organization_id
+WHERE u.user_id = $1;
+
+-- update user by id (updateUserById)
+UPDATE users
+SET first_name = $1,
+    last_name = $2,
+    user_email = $3,
+    organization_id = $4
+WHERE user_id = $5
+RETURNING user_id;
+
+-- get user session info by id (getUserSessionInfoById)
+SELECT
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.user_email,
+    r.role_name,
+    u.organization_id,
+    o.org_name
+FROM users u
+JOIN roles r
+ON u.role_id = r.role_id
+LEFT JOIN organizations o
+ON u.organization_id = o.organization_id
+WHERE u.user_id = $1;
+
+-- assign volunteer (assignVolunteer)
+INSERT INTO project_volunteers (
+    user_id,
+    project_id
+)
+VALUES ($1, $2)
+ON CONFLICT (project_id, user_id) DO NOTHING
+RETURNING user_id, project_id;
+
+-- unassign volunteer (unassignVolunteer)
+DELETE FROM project_volunteers
+WHERE user_id = $1
+AND project_id = $2
+RETURNING user_id, project_id;
+
+-- get all volunteered projects (getAllVolunteeredProjects)
+SELECT
+    p.project_id,
+    p.title,
+    p.proj_description,
+    p.event_location,
+    p.project_datetime,
+    p.project_timezone
+FROM project_volunteers pv
+JOIN projects p
+ON pv.project_id = p.project_id
+WHERE pv.user_id = $1
+ORDER BY p.project_datetime ASC;
+
+-- is volunteered (isVolunteered)
+SELECT 1
+FROM project_volunteers
+WHERE user_id = $1
+AND project_id = $2
+LIMIT 1;

@@ -8,6 +8,11 @@ Service project and community organization web app for CSE 340 coursework. The a
 - Browse service projects and view a single project with its assigned categories.
 - Browse service categories and view the projects assigned to each category.
 - Register a user account and log in with a session-based authentication flow.
+- View a dashboard with account details and current volunteer signups.
+- Edit your own account information after logging in.
+- Sign up to volunteer for service projects and remove volunteer signups later.
+- Track volunteered projects on the user dashboard.
+- Let admins review the full user list, including volunteer counts.
 - Restrict create and edit actions to users with the `admin` role.
 - Assign categories to projects through a protected admin workflow.
 - Show development-only SQL logging and error stack traces when enabled.
@@ -92,6 +97,13 @@ npm start
 - Logged-in user data is stored in the session.
 - Admin-only routes are protected on the server with role-checking middleware.
 - The UI also hides admin-only actions unless the logged-in user has the `admin` role.
+- Volunteer signup and removal routes are protected with login middleware.
+
+### Volunteering
+
+- Logged-in users can volunteer for projects from the project details page.
+- The project details page toggles between volunteer and leave-project actions based on the current user's signup status.
+- The dashboard shows all projects the current user has volunteered for and allows them to remove themselves from those projects.
 
 ### Main Pages
 
@@ -104,10 +116,18 @@ npm start
 - `/category/:id`
 - `/register`
 - `/login`
+
+### Logged-In Only Pages and Actions
+
 - `/dashboard`
+- `/edit-user/:id`
+- `POST /project/:id/volunteer`
+- `POST /project/:id/unvolunteer`
+- `/logout`
 
 ### Admin-Only Pages and Actions
 
+- `/users`
 - `/new-organization`
 - `/edit-organization/:id`
 - `/new-project`
@@ -128,6 +148,7 @@ The files in [src/sql/templates](src/sql/templates) are single-record reference 
 
 - [src/sql/templates/insert_single_organization_templates.sql](src/sql/templates/insert_single_organization_templates.sql)
 - [src/sql/templates/insert_single_project_templates.sql](src/sql/templates/insert_single_project_templates.sql)
+- [src/sql/templates/insert_single_project_volunteer_templates.sql](src/sql/templates/insert_single_project_volunteer_templates.sql)
 - [src/sql/templates/insert_single_category_templates.sql](src/sql/templates/insert_single_category_templates.sql)
 - [src/sql/templates/insert_single_project_categories_templates.sql](src/sql/templates/insert_single_project_categories_templates.sql)
 - [src/sql/templates/insert_single_role_templates.sql](src/sql/templates/insert_single_role_templates.sql)
