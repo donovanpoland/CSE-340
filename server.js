@@ -4,7 +4,7 @@ import express from "express";
 import { fileURLToPath } from 'url';
 //import path object
 import path from 'path';
-// import testing of databse connection
+// import testing of database connection
 import { testConnection } from './src/models/db.js';
 // import routes object
 import router from './src/routes.js';
@@ -15,7 +15,7 @@ import flash from './src/middleware/flash.js';
 import { toTitleCase, capitalizeFirstLetter } from "./src/utils/formatter.js";
 
 
-// use the string stored in .env to display what enviroment is being worked inside of
+// use the string stored in .env to display what environment is being worked inside of
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 // use the string stored in .env to load the session secret
 const SESSION_SECRET = process.env.SESSION_SECRET;
@@ -27,7 +27,7 @@ const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
 // use the IP or address stored in .env or this default IP
 const IP = process.env.IP || "127.0.0.1";
-// use https if in production and http if in development (this doesnt change the protocal just the string used)
+// use http if in development (this doesn't change the protocol just the string used in the console)
 const PROTO = "http://";
 // call the express function and store the returned application object in app
 const app = express();
@@ -81,10 +81,12 @@ app.use(router);
 
 
 // Chrome DevTools probes for an optional workspace configuration file.
-app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
-    console.log(`Chrome DevTools are active status:${res.statusCode}`);
-    res.sendStatus(204);
-});
+if(NODE_ENV === "development"){
+    app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+        console.log(`Chrome DevTools are active status:${res.statusCode}`);
+        res.sendStatus(204);
+    });
+}
 
 
 // *** Error handlers *** //
