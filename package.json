@@ -4,7 +4,7 @@
   "description": "Main project folder for cse340 and class homework",
   "homepage": "https://github.com/donovanpoland/CSE-340.git",
   "bugs": {
-    "url": "https://github.com/donovanpoland/CSE-340.git"
+    "url": "https://github.com/donovanpoland/CSE-340/issues"
   },
   "main": "server.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "keywords": [
     "node.js",
     "servers",
-    "postgress"
+    "postgreSql"
   ],
   "author": "Donovan Poland",
   "license": "MIT",
@@ -33,5 +33,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "engines": {
+    "node": ">=20"
   }
+  
 }

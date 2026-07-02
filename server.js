@@ -86,7 +86,7 @@ if(NODE_ENV === "development"){
         console.log(`Chrome DevTools are active status:${res.statusCode}`);
         res.sendStatus(204);
     });
-}
+};
 
 
 // *** Error handlers *** //
@@ -132,6 +132,7 @@ app.use((err, req, res, next) => {
 // start the server and listen for incoming connections on the provided port
 app.listen(PORT, async () => {
   try {
+    // server will not run if data base is not connected
     await testConnection();
     console.log(`Server is running at ${PROTO}${IP}:${PORT}`);
     console.log(`Environment: ${NODE_ENV}`);

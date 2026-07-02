@@ -51,9 +51,9 @@ const processUserRegistration = async (req, res) => {
 const loginForm = (req, res) => {
 
     const meta = getMetaData(
-        `You have been logged out`,
-        ["loggged out"],
-        `You have been logged out, to gain access to your account again please login.`
+        `Please log in`,
+        ["log in"],
+        `You are not logged in, to gain access to your account again please enter your user name and password.`
     );
 
     res.render('users/login', { 
@@ -71,7 +71,7 @@ const processLogin = async (req, res) => {
         if (user) {
             // Store user info in session
             req.session.user = user;
-            req.flash('success', `Welcome ${user.first_name} ${user.last_name}, you have been successfuly logged in!`);
+            req.flash('success', `Welcome ${user.first_name} ${user.last_name}, you have been successfully logged in!`);
 
             if (res.locals.NODE_ENV === 'development') {
                 console.log('User logged in:', user);
@@ -210,7 +210,7 @@ const processEditUser = async (req, res) => {
     const userId = req.params.id;
     // Extract form data from req.body
     const {firstName, lastName, userEmail, organizationId} = req.body;
-    // catch errors or update successfull
+    // catch errors or update successful
     try {
         // update the user in the database - id is returned when updateUserById is used
         await updateUserById(firstName, lastName, userEmail, organizationId, userId);
